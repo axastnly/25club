@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The 25 Club Gazette</title>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --newsprint: #f4ead5;
+            --ink: #1a1a1a;
+            --border: #2d2d2d;
+            --cream: #faf8f3;
+        }
+
+        body {
+            font-family: 'Libre Franklin', sans-serif;
+            background: var(--newsprint);
+            color: var(--ink);
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, transparent 0%, rgba(139, 69, 19, 0.02) 100%),
+                repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0,0,0,.01) 1px, rgba(0,0,0,.01) 2px);
+            pointer-events: none;
+            opacity: 0.8;
+            z-index: 1;
+        }
+
+        .page-wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px 60px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Top badge */
+        .top-badge {
+            background: var(--cream);
+            border: 2px solid var(--ink);
+            border-radius: 25px;
+            padding: 10px 25px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin: 0 auto 30px;
+            display: flex;
+            justify-content: center;
+            width: fit-content;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .seal-icon {
+            width: 28px;
+            height: 28px;
+            background: #8b4513;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #d4af37;
+            font-weight: 900;
+            font-size: 0.9rem;
+            box-shadow: inset -1px -1px 3px rgba(0,0,0,0.3);
+        }
+
+        .badge-text {
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Main newspaper */
+        .newspaper {
+            background: var(--cream);
+            border: 3px solid var(--ink);
+            padding: 50px 60px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            position: relative;
+        }
+
+        .newspaper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(0deg, transparent 0px, transparent 24px, rgba(0,0,0,.015) 24px, rgba(0,0,0,.015) 25px);
+            pointer-events: none;
+        }
+
+        /* Masthead */
+        .edition-info {
+            text-align: center;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            font-weight: 400;
+        }
+
+        .masthead-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 7rem;
+            font-weight: 400;
+            letter-spacing: -2px;
+            text-align: center;
+            line-height: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .newspaper-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-top: 1px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            margin-bottom: 25px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .meta-price { font-weight: 400; }
+        .meta-date { font-weight: 500; }
+        .meta-edition { font-weight: 400; }
+
+        .divider-thick {
+            height: 4px;
+            background: var(--ink);
+            margin: 25px 0;
+        }
+
+        /* Main content area */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        /* Article */
+        .article-section {
+            position: relative;
+        }
+
+        .main-headline {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 4.5rem;
+            line-height: 0.95;
+            margin-bottom: 25px;
+            font-weight: 400;
+            letter-spacing: -1px;
+        }
+
+        .article-layout {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 25px;
+            margin-bottom: 20px;
+        }
+
+        .article-image {
+            width: 100%;
+            aspect-ratio: 3/4;
+            border: 2px solid var(--ink);
+            background: linear-gradient(135deg, #e8e8e8 0%, #d4d4d4 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            opacity: 0.3;
+        }
+
+        .article-text {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            text-align: justify;
+        }
+
+        .article-text p {
+            margin-bottom: 15px;
+        }
+
+        .drop-cap {
+            float: left;
+            font-size: 4.5rem;
+            line-height: 0.8;
+            font-weight: 900;
+            margin-right: 8px;
+            margin-top: 5px;
+        }
+
+        .article-quote {
+            font-style: italic;
+            margin-top: 20px;
+            padding-left: 20px;
+            border-left: 3px solid var(--ink);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: relative;
+        }
+
+        .subscriber-box {
+            border: 4px double var(--ink);
+            padding: 30px 25px;
+            background: white;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .subscriber-box h3 {
+            font-size: 1.4rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .lock-icon {
+            font-size: 1.2rem;
+        }
+
+        .subscriber-box p {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .access-input {
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            border: none;
+            border-bottom: 2px solid var(--ink);
+            background: transparent;
+            font-family: 'Libre Franklin', sans-serif;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .access-input:focus {
+            outline: none;
+            border-bottom-color: #8b4513;
+        }
+
+        .error-msg {
+            font-size: 0.75rem;
+            color: #8b1a1a;
+            margin-top: -15px;
+            margin-bottom: 15px;
+        }
+
+        .enter-btn {
+            width: 100%;
+            padding: 14px;
+            font-size: 0.9rem;
+            font-family: 'Libre Franklin', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: var(--ink);
+            color: white;
+            border: 2px solid var(--ink);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .enter-btn:hover {
+            background: white;
+            color: var(--ink);
+        }
+
+        /* Classifieds */
+        .classifieds {
+            border-top: 2px solid var(--ink);
+            padding-top: 20px;
+        }
+
+        .classifieds h4 {
+            font-size: 1.1rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        .classified-ad {
+            font-size: 0.8rem;
+            line-height: 1.6;
+            margin-bottom: 12px;
+            font-style: italic;
+        }
+
+        .classified-ad strong {
+            font-weight: 700;
+            font-style: normal;
+            text-transform: uppercase;
+        }
+
+        /* Footer */
+        .newspaper-footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 25px;
+            border-top: 1px solid var(--ink);
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* App view */
+        .hidden { display: none; }
+
+        .app-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 3px double var(--border);
+        }
+
+        .app-header h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 4rem;
+            font-weight: 400;
+            margin-bottom: 10px;
+        }
+
+        .app-header .tagline {
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 50px;
+        }
+
+        .nav-tab {
+            padding: 12px 30px;
+            background: transparent;
+            border: 2px solid var(--border);
+            font-weight: 700;
+            color: var(--border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+
+        .nav-tab:hover {
+            background: var(--border);
+            color: white;
+        }
+
+        .nav-tab.active {
+            background: #8b4513;
+            border-color: #8b4513;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Character cards */
+        .timeline {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 35px;
+        }
+
+        .character-card {
+            background: linear-gradient(to bottom, #d4c4a8 0%, #e8dcc4 100%);
+            border: 4px solid var(--border);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: all 0.4s ease;
+            padding: 25px;
+            position: relative;
+        }
+
+        .character-card::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 2px solid rgba(0,0,0,0.15);
+            pointer-events: none;
+        }
+
+        .character-card:not(.locked):hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.3);
+        }
+
+        .character-card.locked {
+            opacity: 0.5;
+            cursor: default;
+            filter: grayscale(0.7);
+        }
+
+        .card-portrait {
+            width: 100%;
+            aspect-ratio: 3/4;
+            background: linear-gradient(135deg, rgba(0,0,0,0.05), rgba(0,0,0,0.1));
+            border: 3px solid var(--border);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+
+        .card-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .card-date {
+            font-size: 0.8rem;
+            text-align: center;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+            opacity: 0.7;
+            text-transform: uppercase;
+        }
+
+        .card-preview {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            text-align: center;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            font-style: italic;
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #8b1a1a;
+            color: white;
+            padding: 6px 12px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            z-index: 2;
+        }
+
+        .read-more {
+            margin-top: 12px;
+            font-size: 0.75rem;
+            text-align: center;
+            color: #8b1a1a;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(26, 26, 26, 0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .read-modal-content,
+        .write-modal-content {
+            background: linear-gradient(to bottom, #d4c4a8 0%, #e8dcc4 100%);
+            border: 5px solid var(--border);
+            max-width: 700px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 50px 45px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .write-modal-content {
+            background: linear-gradient(135deg, #8b7355 0%, #a68968 50%, #8b7355 100%);
+            max-width: 750px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #8b1a1a;
+            border: none;
+            width: 40px;
+            height: 40px;
+            font-size: 1.5rem;
+            color: white;
+            cursor: pointer;
+            z-index: 2;
+            font-weight: 700;
+        }
+
+        .modal-close:hover {
+            transform: rotate(90deg);
+            background: var(--border);
+        }
+
+        .read-modal-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .read-modal-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.8rem;
+            margin-bottom: 8px;
+        }
+
+        .read-modal-date {
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            opacity: 0.7;
+            text-transform: uppercase;
+        }
+
+        .read-modal-body {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            white-space: pre-wrap;
+        }
+
+        .write-modal-header h2 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.5rem;
+            color: white;
+            text-align: center;
+            margin-bottom: 25px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .prompts-box {
+            background: rgba(250, 248, 243, 0.95);
+            border: 3px solid #3d3020;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .prompts-box h3 {
+            font-weight: 900;
+            margin-bottom: 12px;
+            color: #8b1a1a;
+        }
+
+        .prompts-box li {
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        .write-label {
+            font-size: 1.3rem;
+            color: white;
+            margin-bottom: 12px;
+            display: block;
+            font-weight: 700;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .write-textarea {
+            width: 100%;
+            min-height: 350px;
+            padding: 20px;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            border: 3px solid #3d3020;
+            background: var(--cream);
+            resize: vertical;
+        }
+
+        .write-textarea:focus {
+            outline: none;
+            border-color: #8b1a1a;
+        }
+
+        .overthinking-msg {
+            font-size: 0.85rem;
+            font-style: italic;
+            color: white;
+            text-align: center;
+            margin-top: 12px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .write-footer {
+            margin-top: 25px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .vote-btn {
+            padding: 14px 45px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border: 3px solid #3d3020;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .vote-btn.ja {
+            background: var(--cream);
+            color: var(--ink);
+        }
+
+        .vote-btn.ja:hover {
+            background: #d4af37;
+        }
+
+        .vote-btn.nein {
+            background: transparent;
+            color: white;
+            border-color: white;
+        }
+
+        .vote-btn.nein:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* Setup */
+        .setup-form {
+            background: var(--cream);
+            border: 4px solid var(--border);
+            padding: 50px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .setup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
+            padding-bottom: 20px;
+            border-bottom: 3px double var(--border);
+        }
+
+        .setup-header h2 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.5rem;
+        }
+
+        .friend-row {
+            display: grid;
+            grid-template-columns: 1.5fr 110px 1.5fr 50px;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .form-input {
+            padding: 12px;
+            font-size: 0.95rem;
+            border: 2px solid var(--border);
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #8b1a1a;
+        }
+
+        .btn-remove {
+            background: #8b1a1a;
+            border: 2px solid #8b1a1a;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .btn-remove:hover {
+            background: var(--border);
+            border-color: var(--border);
+        }
+
+        .btn-add {
+            width: 100%;
+            background: transparent;
+            border: 2px dashed var(--border);
+            color: var(--border);
+            padding: 14px;
+            margin-top: 12px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        .btn-add:hover {
+            border-color: #8b1a1a;
+            color: #8b1a1a;
+            background: rgba(139, 26, 26, 0.03);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 100px 40px;
+            opacity: 0.5;
+        }
+
+        .empty-icon {
+            font-size: 5rem;
+            margin-bottom: 25px;
+        }
+
+        .empty-state p {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem;
+        }
+
+        @media (max-width: 900px) {
+            .masthead-title {
+                font-size: 4.5rem;
+            }
+
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .article-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .article-image {
+                max-width: 240px;
+                margin: 0 auto;
+            }
+
+            .timeline {
+                grid-template-columns: 1fr;
+            }
+
+            .friend-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <!-- Landing -->
+        <div id="landing">
+            <div class="top-badge">
+                <div class="seal-icon">25</div>
+                <div class="badge-text">The 25 Club</div>
+            </div>
+
+            <div class="newspaper">
+                <div class="edition-info">ESTABLISHED 2025 • VOL. XXV • NO. 01</div>
+                
+                <h1 class="masthead-title">THE 25 CLUB GAZETTE</h1>
+                
+                <div class="newspaper-meta">
+                    <div class="meta-price">PRICE: ONE REFLECTION</div>
+                    <div class="meta-date">SATURDAY, FEBRUARY 21, 2026</div>
+                    <div class="meta-edition">LATE EDITION</div>
+                </div>
+
+                <div class="divider-thick"></div>
+
+                <div class="main-content">
+                    <div class="article-section">
+                        <h2 class="main-headline">BREAKING: Local Group All Turning 25 This Year</h2>
+                        
+                        <div class="article-layout">
+                            <div class="article-image">📰</div>
+                            
+                            <div class="article-text">
+                                <p><span class="drop-cap">E</span>xperts suggest this phenomenon, occurring once every generation for specific cohorts, has reached a critical peak in 2025. Sources close to the group describe the mood as "reflective yet chaotic." The club remains private, with access strictly limited to those carrying the "Quarter-Life Gene."</p>
+                            </div>
+                        </div>
+
+                        <div class="article-quote">
+                            "We didn't choose the 25 life, the 25 life chose us," says one anonymous member.
+                        </div>
+                    </div>
+
+                    <div class="sidebar">
+                        <div class="subscriber-box">
+                            <h3><span class="lock-icon">🔒</span> SUBSCRIBER ACCESS</h3>
+                            <p>Please enter your private access code to read reflections and post your own birthday letter.</p>
+                            <input type="text" id="passwordInput" class="access-input" placeholder="axa0303">
+                            <div id="errorMsg" class="error-msg" style="display: none;">Invalid subscriber access code.</div>
+                            <button id="loginBtn" class="enter-btn">ENTER CLUB <span>📰</span></button>
+                        </div>
+
+                        <div class="classifieds">
+                            <h4>CLASSIFIEDS</h4>
+                            <div class="classified-ad"><strong>LOST:</strong> My childhood sense of wonder. If found, please return to any 24-year-old.</div>
+                            <div class="classified-ad"><strong>WANTED:</strong> Someone who understands how taxes work. No experience preferred.</div>
+                            <div class="classified-ad"><strong>FOR SALE:</strong> Slightly used existential dread. Price negotiable.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="newspaper-footer">
+                    © 2025 THE 25 CLUB PRIVATE PRESS • ALL RIGHTS RESERVED
+                </div>
+            </div>
+        </div>
+
+        <!-- App -->
+        <div id="mainApp" class="hidden">
+            <div class="top-badge">
+                <div class="seal-icon">25</div>
+                <div class="badge-text">The 25 Club</div>
+            </div>
+
+            <div class="app-header">
+                <h1>THE 25 CLUB</h1>
+                <div class="tagline">CLASSIFIED REFLECTIONS • EST. 2025</div>
+            </div>
+
+            <div class="nav-tabs" id="navTabs"></div>
+
+            <div id="timelineTab" class="tab-content active">
+                <div class="timeline" id="timelineContainer"></div>
+            </div>
+
+            <div id="setupTab" class="tab-content">
+                <div class="setup-form">
+                    <div class="setup-header">
+                        <h2>SETUP REGISTRY</h2>
+                        <button id="logoutBtn" class="enter-btn" style="padding: 10px 20px; font-size: 0.8rem; width: auto;">← BACK</button>
+                    </div>
+                    <p style="margin-bottom: 30px; opacity: 0.7;">Add everyone's name + birthday (DD/MM) + email</p>
+                    
+                    <div id="friendsList"></div>
+                    <button id="addFriendBtn" class="btn-add">+ ADD ANOTHER</button>
+                    
+                    <div style="margin-top: 35px;">
+                        <button id="saveSetupBtn" class="enter-btn">LOCK REGISTRY</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Write Modal -->
+        <div id="writeModal" class="modal-overlay">
+            <div class="write-modal-content">
+                <button class="modal-close" id="closeWriteBtn">×</button>
+                
+                <div class="write-modal-header">
+                    <h2>YOUR REFLECTION</h2>
+                </div>
+
+                <div class="prompts-box">
+                    <h3>Starting points if you're stuck:</h3>
+                    <ul>
+                        <li>what would you tell yourself at 18?</li>
+                        <li>what lesson took way too long to learn?</li>
+                        <li>what's the best advice you got (that you actually followed)?</li>
+                        <li>what did you think mattered that… really doesn't?</li>
+                        <li>what surprised you most about your 20s so far?</li>
+                        <li>what do you know now that you wish you knew sooner?</li>
+                    </ul>
+                </div>
+
+                <label class="write-label">Write your reflection:</label>
+                <textarea id="reflectionText" class="write-textarea" placeholder="just be real. that's the whole point."></textarea>
+                
+                <div id="overthinkingMsg" class="overthinking-msg" style="display: none;"></div>
+                
+                <div class="write-footer">
+                    <button id="cancelWriteBtn" class="vote-btn nein">CANCEL</button>
+                    <button id="saveReflectionBtn" class="vote-btn ja">SUBMIT</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Read Modal -->
+        <div id="readModal" class="modal-overlay">
+            <div class="read-modal-content">
+                <button class="modal-close" id="closeReadBtn">×</button>
+                
+                <div class="read-modal-header">
+                    <div class="read-modal-name" id="readModalName"></div>
+                    <div class="read-modal-date" id="readModalDate"></div>
+                </div>
+                
+                <div class="read-modal-body" id="readModalContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBYmAcFdbj-jtYn1x9sJZiGjtxZPZOpApI",
+            authDomain: "club-8da92.firebaseapp.com",
+            projectId: "club-8da92",
+            storageBucket: "club-8da92.firebasestorage.app",
+            messagingSenderId: "1008552295041",
+            appId: "1:1008552295041:web:134ee6f6720323517f2b80"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const clubDataRef = doc(db, 'club-data', 'main');
+
+        const EMAILJS_CONFIG = {
+            publicKey: 'iGNyyx4P-neaGTs8m',
+            serviceId: 'service_6vriq0w',
+            templates: {
+                birthday: 'birthday_reminder',
+                newReflection: 'new_reflection'
+            }
+        };
+
+        emailjs.init(EMAILJS_CONFIG.publicKey);
+
+        const SETUP_PASSWORD = 'setup25';
+        
+        let state = {
+            friends: [],
+            reflections: {},
+            currentUser: null,
+            isSetupMode: false,
+            editCounts: {},
+            hasPostedFirst: {}
+        };
+
+        async function loadData() {
+            try {
+                const docSnap = await getDoc(clubDataRef);
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    state.friends = data.friends || [];
+                    state.reflections = data.reflections || {};
+                    state.editCounts = data.editCounts || {};
+                    state.hasPostedFirst = data.hasPostedFirst || {};
+                }
+            } catch (error) {
+                console.error('Error loading:', error);
+            }
+        }
+
+        async function saveData() {
+            try {
+                await setDoc(clubDataRef, {
+                    friends: state.friends,
+                    reflections: state.reflections,
+                    editCounts: state.editCounts,
+                    hasPostedFirst: state.hasPostedFirst,
+                    lastUpdated: new Date().toISOString()
+                });
+            } catch (error) {
+                console.error('Error saving:', error);
+                alert('Failed to save. Check connection.');
+            }
+        }
+
+        onSnapshot(clubDataRef, (doc) => {
+            if (doc.exists()) {
+                const data = doc.data();
+                state.friends = data.friends || [];
+                state.reflections = data.reflections || {};
+                state.editCounts = data.editCounts || {};
+                state.hasPostedFirst = data.hasPostedFirst || {};
+                
+                if (state.currentUser) renderTimeline();
+            }
+        });
+
+        function getToday() {
+            const d = new Date();
+            return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}`;
+        }
+
+        function normalizeDate(date) {
+            if (!date || typeof date !== 'string') return '';
+            const parts = date.split('/');
+            if (parts.length !== 2) return date;
+            return `${parts[0].padStart(2, '0')}/${parts[1].padStart(2, '0')}`;
+        }
+
+        function generatePassword(name, birthday) {
+            return (name.replace(/\s+/g, '') + birthday.replace(/\//g, '')).toLowerCase();
+        }
+
+        function hasBirthdayPassed(birthday, today) {
+            const [bDay, bMonth] = birthday.split('/').map(Number);
+            const [tDay, tMonth] = today.split('/').map(Number);
+            
+            if (bMonth < tMonth) return true;
+            if (bMonth > tMonth) return false;
+            return bDay <= tDay;
+        }
+
+        function checkLogin() {
+            const input = document.getElementById('passwordInput').value.toLowerCase().replace(/\s+/g, '');
+            const today = getToday();
+            const errorMsg = document.getElementById('errorMsg');
+
+            if (input === SETUP_PASSWORD) {
+                state.isSetupMode = true;
+                showApp();
+                showTab('setup');
+                return;
+            }
+
+            const friend = state.friends.find(f => generatePassword(f.name, f.birthday) === input);
+
+            if (friend) {
+                if (hasBirthdayPassed(normalizeDate(friend.birthday), today)) {
+                    state.currentUser = friend;
+                    state.isSetupMode = false;
+                    errorMsg.style.display = 'none';
+                    showApp();
+                    renderTimeline();
+                    return;
+                } else {
+                    alert(`hey ${friend.name}! come back on your birthday (${friend.birthday}). \n\nit's ${today} right now. see you soon 🎂`);
+                    return;
+                }
+            }
+
+            errorMsg.style.display = 'block';
+        }
+
+        document.getElementById('passwordInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') checkLogin();
+        });
+
+        function showApp() {
+            document.getElementById('landing').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+            
+            const navTabs = document.getElementById('navTabs');
+            if (state.isSetupMode) {
+                navTabs.innerHTML = '<button class="nav-tab active" data-tab="setup">SETUP</button>';
+            } else {
+                navTabs.innerHTML = '<button class="nav-tab active" data-tab="timeline">THE ARCHIVE</button>';
+            }
+            
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    showTab(this.dataset.tab);
+                });
+            });
+        }
+
+        function logout() {
+            state.currentUser = null;
+            state.isSetupMode = false;
+            document.getElementById('landing').classList.remove('hidden');
+            document.getElementById('mainApp').classList.add('hidden');
+            document.getElementById('passwordInput').value = '';
+            showTab('timeline');
+        }
+
+        function showTab(tabName) {
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            
+            const selectedTab = document.querySelector(`[data-tab="${tabName}"]`);
+            if (selectedTab) selectedTab.classList.add('active');
+            
+            document.getElementById(tabName + 'Tab').classList.add('active');
+
+            if (tabName === 'timeline') renderTimeline();
+            if (tabName === 'setup') renderSetup();
+        }
+
+        function renderTimeline() {
+            const container = document.getElementById('timelineContainer');
+            const today = getToday();
+
+            if (state.friends.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📋</div>
+                        <p>NO ENTRIES YET</p>
+                        <p style="margin-top: 10px; font-size: 1rem; font-family: 'Libre Franklin', sans-serif;">Set things up first.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = state.friends.map((friend, index) => {
+                const reflection = state.reflections[friend.name];
+                const hasReflection = !!reflection;
+                const birthdayPassed = hasBirthdayPassed(normalizeDate(friend.birthday), today);
+                const isCurrentUser = state.currentUser && state.currentUser.name === friend.name;
+
+                return `
+                    <div class="character-card ${!birthdayPassed ? 'locked' : ''}" 
+                         onclick="${isCurrentUser ? 'window.openWriteModal()' : (hasReflection ? `window.openReadModal('${friend.name.replace(/'/g, "\\'")}', '${friend.birthday}')` : '')}">
+                        
+                        ${isCurrentUser && !hasReflection ? '<div class="card-badge">YOUR TURN</div>' : ''}
+                        ${isCurrentUser && hasReflection ? '<div class="card-badge">EDIT</div>' : ''}
+                        
+                        <div class="card-portrait">
+                            <span>${hasReflection ? '✓' : '?'}</span>
+                        </div>
+                        
+                        <div class="card-name">${friend.name}${isCurrentUser ? ' (YOU)' : ''}</div>
+                        <div class="card-date">${friend.birthday}</div>
+                        
+                        ${hasReflection ? `
+                            <div class="card-preview">${reflection}</div>
+                            ${!isCurrentUser ? '<div class="read-more">[ READ FULL ]</div>' : ''}
+                        ` : birthdayPassed ? `
+                            <div class="card-preview">
+                                ${isCurrentUser ? 'Click to write' : `Awaiting ${friend.name}...`}
+                            </div>
+                        ` : `
+                            <div class="card-preview">
+                                SEALED UNTIL ${friend.birthday}
+                            </div>
+                        `}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function openWriteModal() {
+            if (!state.currentUser) return;
+            
+            const existing = state.reflections[state.currentUser.name] || '';
+            document.getElementById('reflectionText').value = existing;
+            
+            const editCount = state.editCounts[state.currentUser.name] || 0;
+            const msgDiv = document.getElementById('overthinkingMsg');
+            
+            if (editCount >= 3) {
+                msgDiv.textContent = `overthinking detected. it's fine, it doesn't need to be perfect ${state.currentUser.name}`;
+                msgDiv.style.display = 'block';
+            } else {
+                msgDiv.style.display = 'none';
+            }
+            
+            document.getElementById('writeModal').classList.add('active');
+        }
+
+        function closeWriteModal() {
+            document.getElementById('writeModal').classList.remove('active');
+        }
+
+        function openReadModal(friendName, birthday) {
+            const reflection = state.reflections[friendName];
+            if (!reflection) return;
+            
+            document.getElementById('readModalName').textContent = friendName;
+            document.getElementById('readModalDate').textContent = birthday;
+            document.getElementById('readModalContent').textContent = reflection;
+            document.getElementById('readModal').classList.add('active');
+        }
+
+        function closeReadModal() {
+            document.getElementById('readModal').classList.remove('active');
+        }
+
+        async function saveReflection() {
+            const text = document.getElementById('reflectionText').value.trim();
+            
+            if (!text) {
+                alert('write something first!');
+                return;
+            }
+
+            if (!state.currentUser) {
+                alert('something went wrong. try logging in again.');
+                return;
+            }
+
+            const isFirstPost = !state.hasPostedFirst[state.currentUser.name];
+            
+            state.reflections[state.currentUser.name] = text;
+            
+            if (!state.editCounts[state.currentUser.name]) {
+                state.editCounts[state.currentUser.name] = 0;
+            }
+            state.editCounts[state.currentUser.name]++;
+            
+            if (isFirstPost) {
+                state.hasPostedFirst[state.currentUser.name] = true;
+            }
+            
+            await saveData();
+            
+            if (isFirstPost) {
+                sendNewReflectionEmails();
+            }
+            
+            closeWriteModal();
+            renderTimeline();
+            
+            alert('reflection saved.');
+        }
+
+        function sendBirthdayEmail(friend) {
+            emailjs.send(
+                EMAILJS_CONFIG.serviceId,
+                EMAILJS_CONFIG.templates.birthday,
+                {
+                    to_name: friend.name,
+                    to_email: friend.email,
+                    access_code: generatePassword(friend.name, friend.birthday),
+                    website_url: 'https://eclectic-medovik-b5f218.netlify.app/'
+                }
+            ).then(
+                () => console.log(`Birthday email → ${friend.name}`),
+                (error) => console.error('Email failed:', error)
+            );
+        }
+
+        function sendNewReflectionEmails() {
+            const today = getToday();
+            
+            const eligibleFriends = state.friends.filter(friend => {
+                const birthdayPassed = hasBirthdayPassed(normalizeDate(friend.birthday), today);
+                const isNotCurrentUser = friend.name !== state.currentUser.name;
+                return birthdayPassed && isNotCurrentUser && friend.email;
+            });
+
+            eligibleFriends.forEach(friend => {
+                emailjs.send(
+                    EMAILJS_CONFIG.serviceId,
+                    EMAILJS_CONFIG.templates.newReflection,
+                    {
+                        to_name: friend.name,
+                        to_email: friend.email,
+                        author_name: state.currentUser.name,
+                        website_url: 'https://eclectic-medovik-b5f218.netlify.app/'
+                    }
+                ).then(
+                    () => console.log(`Notification → ${friend.name}`),
+                    (error) => console.error('Email failed:', error)
+                );
+            });
+        }
+
+        function checkBirthdays() {
+            const today = getToday();
+            
+            state.friends.forEach(friend => {
+                if (normalizeDate(friend.birthday) === today && friend.email) {
+                    const sentKey = `birthday-sent-${friend.name}-${today}`;
+                    if (!localStorage.getItem(sentKey)) {
+                        sendBirthdayEmail(friend);
+                        localStorage.setItem(sentKey, 'true');
+                    }
+                }
+            });
+        }
+
+        function renderSetup() {
+            const container = document.getElementById('friendsList');
+            
+            if (state.friends.length === 0) {
+                state.friends.push({ name: '', birthday: '', email: '' });
+            }
+
+            container.innerHTML = state.friends.map((friend, index) => `
+                <div class="friend-row">
+                    <input type="text" class="form-input" placeholder="Name" value="${friend.name}" data-index="${index}" data-field="name">
+                    <input type="text" class="form-input" placeholder="DD/MM" value="${friend.birthday}" data-index="${index}" data-field="birthday">
+                    <input type="email" class="form-input" placeholder="Email" value="${friend.email || ''}" data-index="${index}" data-field="email">
+                    <button class="btn-remove" data-index="${index}">×</button>
+                </div>
+            `).join('');
+
+            setTimeout(() => {
+                container.querySelectorAll('input').forEach(input => {
+                    input.addEventListener('input', function() {
+                        const index = parseInt(this.dataset.index);
+                        const field = this.dataset.field;
+                        state.friends[index][field] = this.value;
+                    });
+                });
+
+                container.querySelectorAll('.btn-remove').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = parseInt(this.dataset.index);
+                        state.friends.splice(index, 1);
+                        if (state.friends.length === 0) {
+                            state.friends.push({ name: '', birthday: '', email: '' });
+                        }
+                        renderSetup();
+                    });
+                });
+            }, 0);
+        }
+
+        function addFriend() {
+            state.friends.push({ name: '', birthday: '', email: '' });
+            renderSetup();
+        }
+
+        async function saveSetup() {
+            state.friends = state.friends.filter(f => f.name && f.birthday);
+            
+            if (state.friends.length === 0) {
+                alert('add at least one person!');
+                state.friends.push({ name: '', birthday: '', email: '' });
+                renderSetup();
+                return;
+            }
+
+            state.friends.sort((a, b) => {
+                const [aDay, aMonth] = normalizeDate(a.birthday).split('/').map(Number);
+                const [bDay, bMonth] = normalizeDate(b.birthday).split('/').map(Number);
+                
+                if (aMonth !== bMonth) return aMonth - bMonth;
+                return aDay - bDay;
+            });
+
+            await saveData();
+            
+            const missingEmails = state.friends.filter(f => !f.email).length;
+            let message = 'Registry locked! Access codes:\n\n' + 
+                state.friends.map(f => `${f.name}: ${generatePassword(f.name, f.birthday)}`).join('\n');
+            
+            if (missingEmails > 0) {
+                message += `\n\n⚠️ ${missingEmails} missing emails - no notifications`;
+            }
+            
+            alert(message);
+            renderSetup();
+        }
+
+        window.openWriteModal = openWriteModal;
+        window.openReadModal = openReadModal;
+
+        loadData().then(() => {
+            document.getElementById('loginBtn').addEventListener('click', checkLogin);
+            document.getElementById('logoutBtn')?.addEventListener('click', logout);
+            document.getElementById('addFriendBtn')?.addEventListener('click', addFriend);
+            document.getElementById('saveSetupBtn')?.addEventListener('click', saveSetup);
+            document.getElementById('closeWriteBtn')?.addEventListener('click', closeWriteModal);
+            document.getElementById('cancelWriteBtn')?.addEventListener('click', closeWriteModal);
+            document.getElementById('saveReflectionBtn')?.addEventListener('click', saveReflection);
+            document.getElementById('closeReadBtn')?.addEventListener('click', closeReadModal);
+            
+            checkBirthdays();
+            setInterval(checkBirthdays, 60 * 60 * 1000);
+        });
+    </script>
+</body>
+</html>
