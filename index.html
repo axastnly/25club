@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The 25 Club Gazette</title>
-    <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Bebas+Neue&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -13,288 +13,454 @@
         }
 
         :root {
-            --newsprint: #f4ead5;
+            --newsprint: #ede0c4;
             --ink: #1a1a1a;
+            --ink-mid: #3d3d3d;
             --border: #2d2d2d;
-            --cream: #faf8f3;
+            --cream: #faf6ed;
+            --sienna: #8b4513;
+            --gold: #c9a227;
+            --crimson: #8b1a1a;
+            --rule-light: rgba(0,0,0,0.15);
         }
 
         body {
             font-family: 'Libre Franklin', sans-serif;
-            background: var(--newsprint);
+            background: #cfc3a8;
+            background-image:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent 0px, transparent 2px,
+                    rgba(0,0,0,0.018) 2px, rgba(0,0,0,0.018) 3px
+                );
             color: var(--ink);
             line-height: 1.6;
             min-height: 100vh;
-            position: relative;
         }
 
-        /* Texture overlay */
         body::before {
             content: '';
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                radial-gradient(circle at 20% 50%, transparent 0%, rgba(139, 69, 19, 0.02) 100%),
-                repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0,0,0,.01) 1px, rgba(0,0,0,.01) 2px);
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
             pointer-events: none;
-            opacity: 0.8;
-            z-index: 1;
+            z-index: 0;
         }
 
         .page-wrapper {
-            max-width: 1100px;
+            max-width: 1080px;
             margin: 0 auto;
-            padding: 40px 20px 60px;
+            padding: 28px 18px 60px;
             position: relative;
-            z-index: 2;
+            z-index: 1;
         }
 
-        /* Top badge */
+        /* ── TOP BADGE ── */
         .top-badge {
             background: var(--cream);
             border: 2px solid var(--ink);
-            border-radius: 25px;
-            padding: 10px 25px;
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            margin: 0 auto 30px;
+            border-radius: 30px;
+            padding: 7px 22px;
             display: flex;
-            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 0 auto 18px;
             width: fit-content;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.5);
         }
 
         .seal-icon {
-            width: 28px;
-            height: 28px;
-            background: #8b4513;
+            width: 24px;
+            height: 24px;
+            background: var(--sienna);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #d4af37;
+            color: var(--gold);
             font-weight: 900;
-            font-size: 0.9rem;
-            box-shadow: inset -1px -1px 3px rgba(0,0,0,0.3);
+            font-size: 0.78rem;
+            box-shadow: inset -1px -1px 3px rgba(0,0,0,0.35);
+            flex-shrink: 0;
         }
 
         .badge-text {
             font-weight: 700;
-            font-size: 0.95rem;
-            letter-spacing: 1px;
+            font-size: 0.78rem;
+            letter-spacing: 2.5px;
             text-transform: uppercase;
         }
 
-        /* Main newspaper */
+        /* ── NEWSPAPER CONTAINER ── */
         .newspaper {
             background: var(--cream);
-            border: 3px solid var(--ink);
-            padding: 50px 60px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            border: 2px solid var(--ink);
+            padding: 38px 50px 32px;
+            box-shadow:
+                5px 5px 0 #b0a080,
+                9px 9px 0 rgba(0,0,0,0.07),
+                0 24px 64px rgba(0,0,0,0.22);
             position: relative;
+            overflow: hidden;
         }
 
-        .newspaper::before {
+        /* subtle horizontal line texture */
+        .newspaper::after {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: repeating-linear-gradient(0deg, transparent 0px, transparent 24px, rgba(0,0,0,.015) 24px, rgba(0,0,0,.015) 25px);
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent 0px, transparent 22px,
+                rgba(0,0,0,0.011) 22px, rgba(0,0,0,0.011) 23px
+            );
             pointer-events: none;
         }
 
-        /* Masthead */
-        .edition-info {
-            text-align: center;
-            font-size: 0.75rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 15px;
-            font-weight: 400;
+        /* ── RULE PRIMITIVES ── */
+        .r-thick  { height: 3px; background: var(--ink); }
+        .r-thin   { height: 1px; background: var(--ink); margin-top: 2px; }
+        .r-single { height: 1px; background: var(--ink); margin: 8px 0; }
+        .r-double {
+            border-top: 1px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            height: 4px;
+            margin: 8px 0;
         }
+
+        .rule-stack { margin: 7px 0; }
+
+        /* ── MASTHEAD ── */
+        .masthead-topbar {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            padding: 6px 0;
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            margin-bottom: 5px;
+            font-size: 0.62rem;
+            text-transform: uppercase;
+            letter-spacing: 1.8px;
+        }
+        .masthead-topbar .t-right { text-align: right; }
+        .masthead-topbar .t-center { text-align: center; font-weight: 700; }
 
         .masthead-title {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 7rem;
+            font-size: 7.8rem;
             font-weight: 400;
-            letter-spacing: -2px;
+            letter-spacing: -4px;
             text-align: center;
-            line-height: 0.9;
-            margin-bottom: 20px;
+            line-height: 0.88;
+            padding: 10px 0 7px;
+        }
+
+        .masthead-motto {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 0.83rem;
+            text-align: center;
+            margin: 5px 0 9px;
+            opacity: 0.68;
+            letter-spacing: 0.3px;
         }
 
         .newspaper-meta {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            padding: 7px 0;
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+        .newspaper-meta .m-right { text-align: right; }
+        .newspaper-meta .m-center { text-align: center; font-weight: 700; }
+
+        /* ── SECTION LABELS ── */
+        .section-band {
+            display: block;
+            background: var(--ink);
+            color: var(--cream);
+            text-align: center;
+            padding: 5px 18px;
+            font-size: 0.6rem;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin: 16px 0 14px;
+        }
+
+        .section-rule-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.6rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin: 14px 0 12px;
+        }
+        .section-rule-label::before,
+        .section-rule-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--ink);
+        }
+
+        /* ── MAIN CONTENT GRID ── */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 305px;
+            gap: 0;
+        }
+
+        .article-section {
+            padding-right: 28px;
+            border-right: 1px solid rgba(0,0,0,0.18);
+        }
+
+        /* ── ARTICLE ── */
+        .main-headline {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 900;
+            line-height: 1.05;
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
+        }
+
+        .sub-headline {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.08rem;
+            font-weight: 400;
+            line-height: 1.45;
+            margin-bottom: 11px;
+            color: var(--ink-mid);
+        }
+
+        .byline {
+            font-size: 0.62rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+            padding-bottom: 9px;
+            border-bottom: 1px solid rgba(0,0,0,0.14);
+            margin-bottom: 14px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 0;
-            border-top: 1px solid var(--ink);
-            border-bottom: 1px solid var(--ink);
-            margin-bottom: 25px;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
-        .meta-price { font-weight: 400; }
-        .meta-date { font-weight: 500; }
-        .meta-edition { font-weight: 400; }
-
-        .divider-thick {
-            height: 4px;
-            background: var(--ink);
-            margin: 25px 0;
-        }
-
-        /* Main content area */
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 380px;
-            gap: 40px;
-            margin-top: 30px;
-        }
-
-        /* Article */
-        .article-section {
-            position: relative;
-        }
-
-        .main-headline {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 4.5rem;
-            line-height: 0.95;
-            margin-bottom: 25px;
+        .byline-right {
             font-weight: 400;
-            letter-spacing: -1px;
+            font-style: italic;
+            text-transform: none;
+            letter-spacing: 0;
+            font-size: 0.68rem;
         }
 
         .article-layout {
             display: grid;
-            grid-template-columns: 240px 1fr;
-            gap: 25px;
-            margin-bottom: 20px;
+            grid-template-columns: 172px 1fr;
+            gap: 18px;
+            margin-bottom: 14px;
         }
 
         .article-image {
             width: 100%;
             aspect-ratio: 3/4;
-            border: 2px solid var(--ink);
-            background: linear-gradient(135deg, #e8e8e8 0%, #d4d4d4 100%);
+            border: 1px solid var(--border);
+            background: linear-gradient(160deg, #d8cebb 0%, #c8bfad 60%, #b8b0a0 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 4rem;
-            opacity: 0.3;
+            font-size: 2.8rem;
+            opacity: 0.45;
+        }
+
+        .photo-caption {
+            font-size: 0.68rem;
+            line-height: 1.42;
+            margin-top: 6px;
+            color: var(--ink-mid);
+            font-style: italic;
+        }
+
+        .photo-credit {
+            display: block;
+            font-style: normal;
+            font-weight: 700;
+            font-size: 0.58rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.5;
+            margin-top: 3px;
         }
 
         .article-text {
-            font-size: 0.95rem;
-            line-height: 1.7;
+            font-size: 0.88rem;
+            line-height: 1.78;
             text-align: justify;
+            hyphens: auto;
         }
 
-        .article-text p {
-            margin-bottom: 15px;
-        }
+        .article-text p { margin-bottom: 11px; }
 
         .drop-cap {
             float: left;
-            font-size: 4.5rem;
-            line-height: 0.8;
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
             font-weight: 900;
-            margin-right: 8px;
+            line-height: 0.82;
+            margin-right: 6px;
             margin-top: 5px;
         }
 
-        .article-quote {
-            font-style: italic;
-            margin-top: 20px;
-            padding-left: 20px;
-            border-left: 3px solid var(--ink);
+        .dateline {
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.78rem;
+            letter-spacing: 0.8px;
         }
 
-        /* Sidebar */
-        .sidebar {
+        /* ── PULL QUOTE ── */
+        .pull-quote {
+            border-top: 3px solid var(--ink);
+            border-bottom: 3px solid var(--ink);
+            padding: 14px 8px;
+            margin: 17px 0;
+            text-align: center;
+        }
+
+        .pull-quote p {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.08rem;
+            line-height: 1.52;
+            margin: 0;
+        }
+
+        .pull-quote cite {
+            display: block;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-style: normal;
+            font-family: 'Libre Franklin', sans-serif;
+            font-weight: 700;
+            margin-top: 8px;
+            opacity: 0.6;
+        }
+
+        /* ── BRIEF NOTES ── */
+        .brief-item {
+            padding: 9px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            font-size: 0.8rem;
+            line-height: 1.62;
+        }
+        .brief-item:last-child { border-bottom: none; }
+
+        .brief-headline {
+            font-weight: 900;
+            text-transform: uppercase;
+            font-size: 0.72rem;
+            letter-spacing: 0.4px;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar { padding-left: 24px; }
+
+        .subscriber-box {
+            border: 1px solid var(--ink);
+            padding: 20px 18px;
+            background: white;
+            text-align: center;
+            margin-bottom: 18px;
             position: relative;
         }
 
-        .subscriber-box {
-            border: 4px double var(--ink);
-            padding: 30px 25px;
-            background: white;
-            text-align: center;
-            margin-bottom: 30px;
+        .subscriber-box::before {
+            content: '';
+            position: absolute;
+            inset: 4px;
+            border: 1px solid rgba(0,0,0,0.35);
+            pointer-events: none;
         }
 
-        .subscriber-box h3 {
-            font-size: 1.4rem;
-            font-weight: 900;
+        .subscriber-box-title {
+            font-size: 0.65rem;
+            letter-spacing: 4px;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            font-weight: 900;
+            margin-bottom: 3px;
         }
 
-        .lock-icon {
-            font-size: 1.2rem;
+        .subscriber-divider {
+            border: none;
+            border-top: 1px solid rgba(0,0,0,0.18);
+            margin: 9px auto;
+            width: 55%;
         }
 
         .subscriber-box p {
-            font-size: 0.85rem;
-            line-height: 1.6;
-            margin-bottom: 20px;
+            font-size: 0.78rem;
+            line-height: 1.58;
+            margin-bottom: 14px;
+            font-style: italic;
         }
 
         .access-input {
             width: 100%;
-            padding: 12px;
-            font-size: 1rem;
+            padding: 9px;
+            font-size: 0.92rem;
             border: none;
             border-bottom: 2px solid var(--ink);
             background: transparent;
             font-family: 'Libre Franklin', sans-serif;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 14px;
+            letter-spacing: 2px;
         }
 
         .access-input:focus {
             outline: none;
-            border-bottom-color: #8b4513;
+            border-bottom-color: var(--sienna);
+        }
+
+        .access-input::placeholder {
+            letter-spacing: 1px;
+            opacity: 0.35;
+            font-size: 0.82rem;
         }
 
         .error-msg {
-            font-size: 0.75rem;
-            color: #8b1a1a;
-            margin-top: -15px;
-            margin-bottom: 15px;
+            font-size: 0.68rem;
+            color: var(--crimson);
+            margin-top: -9px;
+            margin-bottom: 10px;
+            font-style: italic;
         }
 
         .enter-btn {
             width: 100%;
-            padding: 14px;
-            font-size: 0.9rem;
+            padding: 11px;
+            font-size: 0.7rem;
             font-family: 'Libre Franklin', sans-serif;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             background: var(--ink);
             color: white;
             border: 2px solid var(--ink);
             cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            transition: all 0.25s ease;
         }
 
         .enter-btn:hover {
@@ -302,217 +468,384 @@
             color: var(--ink);
         }
 
-        /* Classifieds */
-        .classifieds {
-            border-top: 2px solid var(--ink);
-            padding-top: 20px;
+        /* ── WEATHER BOX ── */
+        .weather-box {
+            border: 1px solid rgba(0,0,0,0.2);
+            padding: 11px 14px;
+            margin-bottom: 18px;
         }
 
-        .classifieds h4 {
-            font-size: 1.1rem;
+        .weather-title {
+            font-size: 0.58rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-weight: 900;
+            margin-bottom: 7px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid rgba(0,0,0,0.12);
+        }
+
+        .weather-text {
+            font-size: 0.76rem;
+            font-style: italic;
+            line-height: 1.55;
+        }
+
+        /* ── CLASSIFIEDS ── */
+        .classifieds { border-top: 3px solid var(--ink); padding-top: 14px; }
+
+        .classifieds-title {
+            font-size: 0.95rem;
             font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 15px;
+            letter-spacing: 2px;
+            text-align: center;
+            padding-bottom: 9px;
+            border-bottom: 1px solid var(--ink);
+            margin-bottom: 11px;
         }
 
         .classified-ad {
-            font-size: 0.8rem;
-            line-height: 1.6;
-            margin-bottom: 12px;
-            font-style: italic;
+            font-size: 0.73rem;
+            line-height: 1.58;
+            margin-bottom: 9px;
+            padding-bottom: 9px;
+            border-bottom: 1px dotted rgba(0,0,0,0.2);
         }
+
+        .classified-ad:last-child { border-bottom: none; margin-bottom: 0; }
 
         .classified-ad strong {
-            font-weight: 700;
+            font-weight: 900;
             font-style: normal;
             text-transform: uppercase;
+            font-size: 0.62rem;
+            letter-spacing: 1px;
         }
 
-        /* Footer */
+        /* ── ALSO INSIDE ── */
+        .also-inside {
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 9px 0;
+            margin-top: 22px;
+            display: grid;
+            grid-template-columns: auto 1fr 1fr 1fr;
+            gap: 0;
+            align-items: start;
+        }
+
+        .also-label {
+            font-size: 0.58rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding-right: 14px;
+            border-right: 1px solid var(--ink);
+            white-space: nowrap;
+            align-self: center;
+        }
+
+        .also-item {
+            padding: 0 14px;
+            border-right: 1px solid rgba(0,0,0,0.14);
+            font-size: 0.72rem;
+            line-height: 1.48;
+        }
+
+        .also-item:last-child { border-right: none; }
+
+        .also-item strong {
+            display: block;
+            font-weight: 700;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ── NEWSPAPER FOOTER ── */
         .newspaper-footer {
-            text-align: center;
-            margin-top: 40px;
-            padding-top: 25px;
-            border-top: 1px solid var(--ink);
-            font-size: 0.7rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 18px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(0,0,0,0.18);
+            font-size: 0.57rem;
             letter-spacing: 2px;
             text-transform: uppercase;
+            opacity: 0.55;
         }
 
-        /* App view */
+        /* ── APP VIEW ── */
         .hidden { display: none; }
 
-        .app-header {
-            text-align: center;
-            margin-bottom: 50px;
-            padding-bottom: 30px;
-            border-bottom: 3px double var(--border);
-        }
-
-        .app-header h1 {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 4rem;
-            font-weight: 400;
-            margin-bottom: 10px;
-        }
-
-        .app-header .tagline {
-            font-size: 0.85rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
-        .nav-tabs {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin-bottom: 50px;
-        }
-
-        .nav-tab {
-            padding: 12px 30px;
-            background: transparent;
-            border: 2px solid var(--border);
-            font-weight: 700;
-            color: var(--border);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 0.9rem;
-        }
-
-        .nav-tab:hover {
-            background: var(--border);
-            color: white;
-        }
-
-        .nav-tab.active {
-            background: #8b4513;
-            border-color: #8b4513;
-            color: white;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* Character cards */
-        .timeline {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 35px;
-        }
-
-        .character-card {
-            background: linear-gradient(to bottom, #d4c4a8 0%, #e8dcc4 100%);
-            border: 4px solid var(--border);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-            cursor: pointer;
-            transition: all 0.4s ease;
-            padding: 25px;
+        .app-newspaper {
+            background: var(--cream);
+            border: 2px solid var(--ink);
+            padding: 32px 44px 38px;
+            box-shadow:
+                5px 5px 0 #b0a080,
+                9px 9px 0 rgba(0,0,0,0.07),
+                0 24px 64px rgba(0,0,0,0.22);
             position: relative;
+            overflow: hidden;
         }
 
-        .character-card::before {
+        .app-newspaper::after {
             content: '';
             position: absolute;
-            top: 10px;
-            left: 10px;
-            right: 10px;
-            bottom: 10px;
-            border: 2px solid rgba(0,0,0,0.15);
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent 0px, transparent 22px,
+                rgba(0,0,0,0.011) 22px, rgba(0,0,0,0.011) 23px
+            );
             pointer-events: none;
         }
 
+        .app-masthead-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 7px;
+            margin-bottom: 4px;
+        }
+
+        .app-masthead-side {
+            font-size: 0.6rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            opacity: 0.55;
+            width: 130px;
+        }
+
+        .app-masthead-side.right { text-align: right; }
+
+        .app-masthead-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 3.6rem;
+            line-height: 1;
+            letter-spacing: -1px;
+            text-align: center;
+            flex: 1;
+        }
+
+        /* ── APP NAV BAR ── */
+        .app-section-bar {
+            background: var(--ink);
+            color: var(--cream);
+            display: flex;
+            align-items: stretch;
+            margin: 8px 0 26px;
+            min-height: 38px;
+        }
+
+        .app-section-label {
+            padding: 0 18px;
+            font-size: 0.58rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-weight: 700;
+            border-right: 1px solid rgba(255,255,255,0.18);
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+        }
+
+        .app-section-tabs { display: flex; }
+
+        .nav-tab {
+            padding: 0 20px;
+            background: transparent;
+            border: none;
+            border-right: 1px solid rgba(255,255,255,0.12);
+            font-weight: 600;
+            color: rgba(255,255,255,0.55);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.6rem;
+            font-family: 'Libre Franklin', sans-serif;
+        }
+
+        .nav-tab:hover {
+            color: white;
+            background: rgba(255,255,255,0.08);
+        }
+
+        .nav-tab.active {
+            color: var(--ink);
+            background: var(--cream);
+            font-weight: 700;
+        }
+
+        .app-back-btn {
+            margin-left: auto;
+            padding: 0 16px;
+            background: transparent;
+            border: none;
+            border-left: 1px solid rgba(255,255,255,0.18);
+            color: rgba(255,255,255,0.55);
+            cursor: pointer;
+            font-size: 0.58rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-family: 'Libre Franklin', sans-serif;
+            transition: all 0.2s ease;
+        }
+
+        .app-back-btn:hover {
+            background: rgba(255,255,255,0.08);
+            color: white;
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* ── CHARACTER CARDS ── */
+        .timeline {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(252px, 1fr));
+            gap: 24px;
+        }
+
+        .character-card {
+            background: var(--cream);
+            border: 1px solid #c2b090;
+            box-shadow: 2px 3px 0 #a89868, 3px 5px 12px rgba(0,0,0,0.09);
+            cursor: pointer;
+            transition: transform 0.28s ease, box-shadow 0.28s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
         .character-card:not(.locked):hover {
-            transform: translateY(-6px);
-            box-shadow: 0 12px 28px rgba(0,0,0,0.3);
+            transform: translateY(-5px) rotate(0.4deg);
+            box-shadow: 5px 10px 0 #a89868, 6px 14px 22px rgba(0,0,0,0.14);
         }
 
         .character-card.locked {
-            opacity: 0.5;
+            opacity: 0.45;
             cursor: default;
-            filter: grayscale(0.7);
+            filter: grayscale(0.9);
         }
 
-        .card-portrait {
-            width: 100%;
-            aspect-ratio: 3/4;
-            background: linear-gradient(135deg, rgba(0,0,0,0.05), rgba(0,0,0,0.1));
-            border: 3px solid var(--border);
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4rem;
+        .card-category {
+            background: var(--ink);
+            color: var(--cream);
+            font-size: 0.52rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            text-align: center;
+            padding: 6px 10px;
+            font-weight: 700;
+        }
+
+        .card-inner { padding: 17px 17px 14px; }
+
+        .card-monogram {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.8rem;
+            font-weight: 900;
+            font-style: italic;
+            text-align: center;
+            line-height: 1;
+            margin-bottom: 6px;
+            opacity: 0.1;
+            letter-spacing: -3px;
+            pointer-events: none;
         }
 
         .card-name {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.8rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.35rem;
+            font-weight: 700;
             text-align: center;
-            margin-bottom: 8px;
-            letter-spacing: 1px;
+            margin-bottom: 3px;
+            line-height: 1.2;
         }
 
         .card-date {
-            font-size: 0.8rem;
-            text-align: center;
-            margin-bottom: 15px;
+            font-size: 0.62rem;
             letter-spacing: 2px;
-            opacity: 0.7;
+            text-align: center;
+            opacity: 0.5;
             text-transform: uppercase;
+            margin-bottom: 11px;
+        }
+
+        .card-divider {
+            border: none;
+            border-top: 1px solid rgba(0,0,0,0.11);
+            margin: 9px 0;
         }
 
         .card-preview {
-            font-size: 0.9rem;
-            line-height: 1.6;
+            font-family: 'Playfair Display', serif;
+            font-size: 0.8rem;
+            line-height: 1.72;
             text-align: center;
             display: -webkit-box;
-            -webkit-line-clamp: 3;
+            -webkit-line-clamp: 4;
             -webkit-box-orient: vertical;
             overflow: hidden;
             font-style: italic;
+            hyphens: auto;
+        }
+
+        .card-preview.pending {
+            font-family: 'Libre Franklin', sans-serif;
+            font-style: normal;
+            font-size: 0.68rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            opacity: 0.38;
+        }
+
+        .card-status {
+            font-size: 0.57rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+            padding-top: 11px;
+            margin-top: 9px;
+            border-top: 1px solid rgba(0,0,0,0.08);
+            font-weight: 700;
+            opacity: 0.52;
+        }
+
+        .read-more {
+            font-size: 0.57rem;
+            text-align: center;
+            color: var(--crimson);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+            margin-top: 7px;
         }
 
         .card-badge {
             position: absolute;
-            top: 15px;
-            right: 15px;
-            background: #8b1a1a;
+            top: 0;
+            right: 0;
+            background: var(--crimson);
             color: white;
-            padding: 6px 12px;
-            font-size: 0.7rem;
+            padding: 5px 10px;
+            font-size: 0.52rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             font-weight: 700;
             z-index: 2;
         }
 
-        .read-more {
-            margin-top: 12px;
-            font-size: 0.75rem;
-            text-align: center;
-            color: #8b1a1a;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 700;
-        }
-
-        /* Modals */
+        /* ── MODALS ── */
         .modal-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(26, 26, 26, 0.95);
+            inset: 0;
+            background: rgba(18,15,10,0.96);
             display: none;
             align-items: center;
             justify-content: center;
@@ -520,178 +853,206 @@
             padding: 20px;
         }
 
-        .modal-overlay.active {
-            display: flex;
-        }
+        .modal-overlay.active { display: flex; }
 
-        .read-modal-content,
-        .write-modal-content {
-            background: linear-gradient(to bottom, #d4c4a8 0%, #e8dcc4 100%);
-            border: 5px solid var(--border);
-            max-width: 700px;
+        .read-modal-content {
+            background: var(--cream);
+            border: 2px solid var(--ink);
+            max-width: 660px;
             width: 100%;
-            max-height: 85vh;
+            max-height: 88vh;
             overflow-y: auto;
-            padding: 50px 45px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            padding: 42px 48px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.6);
             position: relative;
         }
 
         .write-modal-content {
-            background: linear-gradient(135deg, #8b7355 0%, #a68968 50%, #8b7355 100%);
-            max-width: 750px;
+            background: linear-gradient(145deg, #60483a 0%, #7d6050 50%, #60483a 100%);
+            border: 2px solid #36241a;
+            max-width: 700px;
+            width: 100%;
+            max-height: 88vh;
+            overflow-y: auto;
+            padding: 36px 42px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.65);
+            position: relative;
         }
 
         .modal-close {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            background: #8b1a1a;
-            border: none;
-            width: 40px;
-            height: 40px;
-            font-size: 1.5rem;
-            color: white;
+            top: 14px;
+            right: 14px;
+            background: none;
+            border: 1px solid currentColor;
+            width: 30px;
+            height: 30px;
+            font-size: 1.1rem;
+            color: inherit;
             cursor: pointer;
-            z-index: 2;
-            font-weight: 700;
+            opacity: 0.45;
+            transition: opacity 0.2s, transform 0.2s;
+            line-height: 1;
         }
 
-        .modal-close:hover {
-            transform: rotate(90deg);
-            background: var(--border);
-        }
+        .modal-close:hover { opacity: 1; transform: rotate(90deg); }
 
         .read-modal-header {
             text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid var(--border);
+            margin-bottom: 28px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid rgba(0,0,0,0.13);
+        }
+
+        .read-modal-header::before {
+            content: '— Reflection on File —';
+            display: block;
+            font-size: 0.58rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-weight: 700;
+            opacity: 0.42;
+            margin-bottom: 14px;
         }
 
         .read-modal-name {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 2.8rem;
-            margin-bottom: 8px;
+            font-family: 'Playfair Display', serif;
+            font-size: 2.3rem;
+            font-weight: 700;
+            margin-bottom: 5px;
         }
 
         .read-modal-date {
-            font-size: 0.85rem;
+            font-size: 0.7rem;
             letter-spacing: 2px;
-            opacity: 0.7;
+            opacity: 0.48;
             text-transform: uppercase;
         }
 
         .read-modal-body {
-            font-size: 1.1rem;
-            line-height: 1.9;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.02rem;
+            line-height: 1.95;
             white-space: pre-wrap;
         }
 
+        .write-modal-header { text-align: center; margin-bottom: 18px; }
+
         .write-modal-header h2 {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 2.5rem;
-            color: white;
-            text-align: center;
-            margin-bottom: 25px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            font-size: 2.1rem;
+            color: var(--cream);
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.45);
+        }
+
+        .write-modal-header p {
+            font-size: 0.62rem;
+            color: rgba(255,255,255,0.52);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-top: 4px;
         }
 
         .prompts-box {
-            background: rgba(250, 248, 243, 0.95);
-            border: 3px solid #3d3020;
-            padding: 25px;
-            margin-bottom: 25px;
+            background: rgba(250,246,237,0.9);
+            border: 1px solid #36241a;
+            padding: 16px 20px;
+            margin-bottom: 18px;
         }
 
         .prompts-box h3 {
-            font-weight: 900;
-            margin-bottom: 12px;
-            color: #8b1a1a;
+            font-weight: 700;
+            margin-bottom: 9px;
+            color: var(--crimson);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .prompts-box li {
-            font-size: 0.9rem;
-            margin-bottom: 8px;
-            line-height: 1.6;
+            font-size: 0.82rem;
+            margin-bottom: 5px;
+            line-height: 1.58;
+            color: var(--ink);
         }
 
         .write-label {
-            font-size: 1.3rem;
-            color: white;
-            margin-bottom: 12px;
+            font-size: 0.62rem;
+            color: rgba(255,255,255,0.62);
+            margin-bottom: 9px;
             display: block;
             font-weight: 700;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
         .write-textarea {
             width: 100%;
-            min-height: 350px;
-            padding: 20px;
-            font-size: 1.05rem;
-            line-height: 1.8;
-            border: 3px solid #3d3020;
+            min-height: 280px;
+            padding: 16px;
+            font-family: 'Playfair Display', serif;
+            font-size: 0.97rem;
+            line-height: 1.82;
+            border: 1px solid #36241a;
             background: var(--cream);
             resize: vertical;
         }
 
         .write-textarea:focus {
             outline: none;
-            border-color: #8b1a1a;
+            border-color: var(--gold);
         }
 
         .overthinking-msg {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-style: italic;
-            color: white;
+            color: rgba(255,255,255,0.68);
             text-align: center;
-            margin-top: 12px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            margin-top: 9px;
         }
 
         .write-footer {
-            margin-top: 25px;
+            margin-top: 18px;
             display: flex;
-            gap: 15px;
+            gap: 10px;
             justify-content: center;
         }
 
         .vote-btn {
-            padding: 14px 45px;
-            font-size: 1.1rem;
+            padding: 11px 38px;
+            font-size: 0.72rem;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            border: 3px solid #3d3020;
+            letter-spacing: 3px;
+            border: 2px solid;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
+            font-family: 'Libre Franklin', sans-serif;
         }
 
         .vote-btn.ja {
             background: var(--cream);
             color: var(--ink);
+            border-color: var(--cream);
         }
 
-        .vote-btn.ja:hover {
-            background: #d4af37;
-        }
+        .vote-btn.ja:hover { background: var(--gold); border-color: var(--gold); }
 
         .vote-btn.nein {
             background: transparent;
-            color: white;
-            border-color: white;
+            color: rgba(255,255,255,0.62);
+            border-color: rgba(255,255,255,0.28);
         }
 
-        .vote-btn.nein:hover {
-            background: rgba(255,255,255,0.2);
-        }
+        .vote-btn.nein:hover { color: white; border-color: white; }
 
-        /* Setup */
+        /* ── SETUP ── */
         .setup-form {
             background: var(--cream);
-            border: 4px solid var(--border);
-            padding: 50px;
+            border: 1px solid #c2b090;
+            padding: 38px;
             max-width: 800px;
             margin: 0 auto;
         }
@@ -700,258 +1061,405 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 35px;
-            padding-bottom: 20px;
-            border-bottom: 3px double var(--border);
+            margin-bottom: 28px;
+            padding-bottom: 14px;
+            border-bottom: 2px solid var(--border);
         }
 
         .setup-header h2 {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 2.5rem;
+            font-size: 1.9rem;
+            letter-spacing: 2px;
         }
 
         .friend-row {
             display: grid;
-            grid-template-columns: 1.5fr 110px 1.5fr 50px;
-            gap: 12px;
-            margin-bottom: 18px;
+            grid-template-columns: 1.5fr 108px 1.5fr 42px;
+            gap: 10px;
+            margin-bottom: 11px;
         }
 
         .form-input {
-            padding: 12px;
-            font-size: 0.95rem;
-            border: 2px solid var(--border);
+            padding: 10px 12px;
+            font-size: 0.88rem;
+            border: 1px solid #c2b090;
             background: white;
+            font-family: 'Libre Franklin', sans-serif;
         }
 
-        .form-input:focus {
-            outline: none;
-            border-color: #8b1a1a;
-        }
+        .form-input:focus { outline: none; border-color: var(--sienna); }
 
         .btn-remove {
-            background: #8b1a1a;
-            border: 2px solid #8b1a1a;
+            background: var(--crimson);
+            border: none;
             color: white;
-            font-size: 1.2rem;
+            font-size: 1.05rem;
             cursor: pointer;
             font-weight: 700;
+            transition: background 0.2s;
         }
 
-        .btn-remove:hover {
-            background: var(--border);
-            border-color: var(--border);
-        }
+        .btn-remove:hover { background: var(--border); }
 
         .btn-add {
             width: 100%;
             background: transparent;
-            border: 2px dashed var(--border);
-            color: var(--border);
-            padding: 14px;
-            margin-top: 12px;
+            border: 1px dashed #c2b090;
+            color: var(--ink-mid);
+            padding: 11px;
+            margin-top: 6px;
             cursor: pointer;
             text-transform: uppercase;
             letter-spacing: 2px;
             font-weight: 600;
+            font-size: 0.72rem;
+            font-family: 'Libre Franklin', sans-serif;
+            transition: all 0.2s;
         }
 
-        .btn-add:hover {
-            border-color: #8b1a1a;
-            color: #8b1a1a;
-            background: rgba(139, 26, 26, 0.03);
-        }
+        .btn-add:hover { border-color: var(--sienna); color: var(--sienna); }
 
         .empty-state {
             text-align: center;
-            padding: 100px 40px;
-            opacity: 0.5;
+            padding: 80px 40px;
+            opacity: 0.4;
+            grid-column: 1 / -1;
         }
 
         .empty-icon {
-            font-size: 5rem;
-            margin-bottom: 25px;
+            font-size: 3.5rem;
+            display: block;
+            margin-bottom: 16px;
         }
 
         .empty-state p {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.8rem;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.2rem;
         }
 
+        /* ── RESPONSIVE ── */
         @media (max-width: 900px) {
-            .masthead-title {
-                font-size: 4.5rem;
+            .newspaper, .app-newspaper { padding: 24px 22px 28px; }
+
+            .masthead-title { font-size: 3.8rem; letter-spacing: -2px; }
+            .masthead-topbar { font-size: 0.55rem; }
+
+            .main-content { grid-template-columns: 1fr; }
+
+            .article-section {
+                padding-right: 0;
+                border-right: none;
+                padding-bottom: 22px;
+                border-bottom: 1px solid rgba(0,0,0,0.14);
             }
 
-            .main-content {
-                grid-template-columns: 1fr;
-            }
+            .sidebar { padding-left: 0; }
 
-            .article-layout {
-                grid-template-columns: 1fr;
-            }
+            .article-layout { grid-template-columns: 1fr; }
 
             .article-image {
-                max-width: 240px;
+                max-width: 180px;
                 margin: 0 auto;
             }
 
-            .timeline {
+            .timeline { grid-template-columns: 1fr; }
+
+            .friend-row { grid-template-columns: 1fr 1fr; }
+
+            .also-inside {
                 grid-template-columns: 1fr;
+                gap: 8px;
             }
 
-            .friend-row {
-                grid-template-columns: 1fr;
+            .also-label {
+                border-right: none;
+                border-bottom: 1px solid var(--ink);
+                padding-right: 0;
+                padding-bottom: 6px;
             }
+
+            .also-item {
+                border-right: none;
+                border-bottom: 1px solid rgba(0,0,0,0.1);
+                padding: 5px 0;
+            }
+
+            .app-masthead-side { display: none; }
+            .app-masthead-title { font-size: 2.4rem; }
         }
     </style>
 </head>
 <body>
     <div class="page-wrapper">
-        <!-- Landing -->
+
+        <!-- ═══════════════════ LANDING ═══════════════════ -->
         <div id="landing">
             <div class="top-badge">
                 <div class="seal-icon">25</div>
-                <div class="badge-text">The 25 Club</div>
+                <div class="badge-text">The 25 Club &middot; Private Circular</div>
             </div>
 
             <div class="newspaper">
-                <div class="edition-info">ESTABLISHED 2025 • VOL. XXV • NO. 01</div>
-                
-                <h1 class="masthead-title">THE 25 CLUB GAZETTE</h1>
-                
-                <div class="newspaper-meta">
-                    <div class="meta-price">PRICE: ONE REFLECTION</div>
-                    <div class="meta-date">SATURDAY, FEBRUARY 21, 2026</div>
-                    <div class="meta-edition">LATE EDITION</div>
+
+                <!-- Masthead -->
+                <div class="masthead-topbar">
+                    <span>Vol. XXV, No. 01</span>
+                    <span class="t-center">Established 2025</span>
+                    <span class="t-right">Price: One Reflection</span>
                 </div>
 
-                <div class="divider-thick"></div>
+                <h1 class="masthead-title">THE 25 CLUB GAZETTE</h1>
 
+                <div class="masthead-motto">"All the Reflection That's Fit to Print"</div>
+
+                <div class="rule-stack">
+                    <div class="r-thick"></div>
+                    <div class="r-thin"></div>
+                </div>
+
+                <div class="newspaper-meta">
+                    <span>Saturday, February 21, 2026</span>
+                    <span class="m-center">Late City Edition</span>
+                    <span class="m-right">Subscribers Only</span>
+                </div>
+
+                <div class="rule-stack">
+                    <div class="r-thin"></div>
+                    <div class="r-thick"></div>
+                </div>
+
+                <!-- Body -->
                 <div class="main-content">
+
+                    <!-- ── Article column ── -->
                     <div class="article-section">
-                        <h2 class="main-headline">BREAKING: Local Group All Turning 25 This Year</h2>
-                        
+
+                        <div class="section-rule-label">Society &amp; Quarter-Life Affairs</div>
+
+                        <h2 class="main-headline">Local Cohort Unanimously Reaches Age of 25 This Calendar Year</h2>
+
+                        <div class="sub-headline">Experts confirm the phenomenon "entirely expected"; members describe the condition as "reflective yet chaotic"</div>
+
+                        <div class="byline">
+                            <span>By Our Special Correspondent</span>
+                            <span class="byline-right">The 25 Club Gazette, Private Circulation</span>
+                        </div>
+
                         <div class="article-layout">
-                            <div class="article-image">📰</div>
-                            
+                            <div>
+                                <div class="article-image">📰</div>
+                                <div class="photo-caption">
+                                    Members of the 25 Club, photographed at an undisclosed location, 2025.
+                                    <span class="photo-credit">Gazette Photo Desk</span>
+                                </div>
+                            </div>
+
                             <div class="article-text">
-                                <p><span class="drop-cap">E</span>xperts suggest this phenomenon, occurring once every generation for specific cohorts, has reached a critical peak in 2025. Sources close to the group describe the mood as "reflective yet chaotic." The club remains private, with access strictly limited to those carrying the "Quarter-Life Gene."</p>
+                                <p><span class="drop-cap">A</span>&thinsp;<span class="dateline">London, 2025</span> — Sources close to the group describe the mood as "reflective yet chaotic." The club remains strictly private, its rolls accessible only to those carrying what insiders have taken to calling the <em>Quarter-Life Gene.</em></p>
+                                <p>Each member, it is reported, shall upon the occasion of their twenty-fifth birthday receive by electronic post a private subscriber code — granting access to the Gazette's secured archive, there to read the testimonies of their fellow members, and to commit their own reflection to the permanent record.</p>
                             </div>
                         </div>
 
-                        <div class="article-quote">
-                            "We didn't choose the 25 life, the 25 life chose us," says one anonymous member.
+                        <div class="pull-quote">
+                            <p>"We didn't choose the 25 life — the 25 life chose us."</p>
+                            <cite>— Anonymous Member, in correspondence with this Gazette</cite>
                         </div>
-                    </div>
 
+                        <div class="article-text">
+                            <p>The archive grows with each passing birthday. Reflections, once submitted, are held in perpetuity for all eligible members to peruse. Those whose birthdays are yet to arrive must wait — their entries sealed, their columns blank, their names listed in tomorrow's edition.</p>
+                        </div>
+
+                        <div class="r-single" style="margin-top: 18px;"></div>
+
+                        <div class="section-rule-label" style="margin-top: 14px;">Brief Notes</div>
+
+                        <div class="brief-item">
+                            <span class="brief-headline">On the Curious State of Being 25</span>
+                            Old enough to know better. Young enough to repeat the same mistakes. This correspondent has been informed that this is, in fact, entirely normal.
+                        </div>
+
+                        <div class="brief-item">
+                            <span class="brief-headline">Access Codes Dispatched</span>
+                            All subscribers whose birthdays have passed have been dispatched their private codes by electronic post. Contact the registry office if yours has not arrived.
+                        </div>
+
+                        <div class="brief-item">
+                            <span class="brief-headline">New Submissions Trigger Notifications</span>
+                            When a member posts their first reflection, all eligible subscribers receive an electronic notification and are encouraged to read promptly.
+                        </div>
+
+                    </div><!-- /article-section -->
+
+                    <!-- ── Sidebar ── -->
                     <div class="sidebar">
+
                         <div class="subscriber-box">
-                            <h3><span class="lock-icon">🔒</span> SUBSCRIBER ACCESS</h3>
-                            <p>Please enter your private access code to read reflections and post your own birthday letter.</p>
-                            <input type="text" id="passwordInput" class="access-input" placeholder="axa0303">
-                            <div id="errorMsg" class="error-msg" style="display: none;">Invalid subscriber access code.</div>
-                            <button id="loginBtn" class="enter-btn">ENTER CLUB <span>📰</span></button>
+                            <div class="subscriber-box-title">Subscriber Access</div>
+                            <hr class="subscriber-divider">
+                            <p>Enter your private subscriber code to access the archive and post your birthday reflection.</p>
+                            <input type="text" id="passwordInput" class="access-input" placeholder="your code here">
+                            <div id="errorMsg" class="error-msg" style="display:none;">Invalid subscriber code. Please check your email.</div>
+                            <button id="loginBtn" class="enter-btn">Enter the Gazette</button>
+                        </div>
+
+                        <div class="weather-box">
+                            <div class="weather-title">Today's Outlook</div>
+                            <div class="weather-text">Partly cloudy with a chance of existential contemplation. Highs of uncertainty; lows of nostalgia. Bring a jacket and your best memories.</div>
                         </div>
 
                         <div class="classifieds">
-                            <h4>CLASSIFIEDS</h4>
-                            <div class="classified-ad"><strong>LOST:</strong> My childhood sense of wonder. If found, please return to any 24-year-old.</div>
-                            <div class="classified-ad"><strong>WANTED:</strong> Someone who understands how taxes work. No experience preferred.</div>
-                            <div class="classified-ad"><strong>FOR SALE:</strong> Slightly used existential dread. Price negotiable.</div>
+                            <div class="classifieds-title">Classifieds</div>
+
+                            <div class="classified-ad">
+                                <strong>Lost:</strong> My childhood sense of wonder. Last seen circa age 22. If found, please return to any former 24-year-old. Reward offered.
+                            </div>
+
+                            <div class="classified-ad">
+                                <strong>Wanted:</strong> Someone who understands how taxes work. No experience necessary — none available in any case.
+                            </div>
+
+                            <div class="classified-ad">
+                                <strong>For Sale:</strong> Slightly used existential dread, one careful owner. Price negotiable. Collection in person only.
+                            </div>
+
+                            <div class="classified-ad">
+                                <strong>Noticed:</strong> Anyone else doing laundry on a Friday night? We see you. You're doing great.
+                            </div>
                         </div>
+
+                    </div><!-- /sidebar -->
+
+                </div><!-- /main-content -->
+
+                <!-- Also Inside -->
+                <div class="also-inside">
+                    <div class="also-label">Also Inside</div>
+                    <div class="also-item">
+                        <strong>The Archive</strong>
+                        Read reflections from all members who have reached 25. Accessible after login.
+                    </div>
+                    <div class="also-item">
+                        <strong>Birthday Notices</strong>
+                        Automatic notification dispatched on each member's birthday with their access code.
+                    </div>
+                    <div class="also-item">
+                        <strong>New Submissions</strong>
+                        All eligible members notified when a new reflection is posted to the archive.
                     </div>
                 </div>
 
                 <div class="newspaper-footer">
-                    © 2025 THE 25 CLUB PRIVATE PRESS • ALL RIGHTS RESERVED
+                    <span>© 2025 The 25 Club Private Press</span>
+                    <span>All Rights Reserved</span>
+                    <span>Private Circulation Only</span>
                 </div>
-            </div>
-        </div>
 
-        <!-- App -->
+            </div><!-- /newspaper -->
+        </div><!-- /landing -->
+
+
+        <!-- ═══════════════════ MAIN APP ═══════════════════ -->
         <div id="mainApp" class="hidden">
             <div class="top-badge">
                 <div class="seal-icon">25</div>
-                <div class="badge-text">The 25 Club</div>
+                <div class="badge-text">The 25 Club &middot; Private Circular</div>
             </div>
 
-            <div class="app-header">
-                <h1>THE 25 CLUB</h1>
-                <div class="tagline">CLASSIFIED REFLECTIONS • EST. 2025</div>
-            </div>
+            <div class="app-newspaper">
 
-            <div class="nav-tabs" id="navTabs"></div>
+                <!-- App masthead -->
+                <div class="app-masthead-row">
+                    <span class="app-masthead-side">The 25 Club</span>
+                    <h1 class="app-masthead-title">THE 25 CLUB GAZETTE</h1>
+                    <span class="app-masthead-side right">Private Archive</span>
+                </div>
 
-            <div id="timelineTab" class="tab-content active">
-                <div class="timeline" id="timelineContainer"></div>
-            </div>
+                <div class="rule-stack">
+                    <div class="r-thick"></div>
+                    <div class="r-thin"></div>
+                </div>
 
-            <div id="setupTab" class="tab-content">
-                <div class="setup-form">
-                    <div class="setup-header">
-                        <h2>SETUP REGISTRY</h2>
-                        <button id="logoutBtn" class="enter-btn" style="padding: 10px 20px; font-size: 0.8rem; width: auto;">← BACK</button>
-                    </div>
-                    <p style="margin-bottom: 30px; opacity: 0.7;">Add everyone's name + birthday (DD/MM) + email</p>
-                    
-                    <div id="friendsList"></div>
-                    <button id="addFriendBtn" class="btn-add">+ ADD ANOTHER</button>
-                    
-                    <div style="margin-top: 35px;">
-                        <button id="saveSetupBtn" class="enter-btn">LOCK REGISTRY</button>
+                <!-- Nav / section bar — populated by JS -->
+                <div class="app-section-bar" id="navTabs"></div>
+
+                <!-- Archive tab -->
+                <div id="timelineTab" class="tab-content active">
+                    <div class="timeline" id="timelineContainer"></div>
+                </div>
+
+                <!-- Setup tab -->
+                <div id="setupTab" class="tab-content">
+                    <div class="setup-form">
+                        <div class="setup-header">
+                            <h2>Registry Setup</h2>
+                            <button id="logoutBtn" class="enter-btn" style="padding:9px 18px;font-size:0.7rem;width:auto;letter-spacing:2px;">← Exit</button>
+                        </div>
+                        <p style="margin-bottom:22px;opacity:0.58;font-size:0.82rem;font-style:italic;">Enter each member's name, birthday (DD/MM), and email address.</p>
+
+                        <div id="friendsList"></div>
+                        <button id="addFriendBtn" class="btn-add">+ Add Another Member</button>
+
+                        <div style="margin-top:28px;">
+                            <button id="saveSetupBtn" class="enter-btn">Lock Registry</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- Write Modal -->
+            </div><!-- /app-newspaper -->
+        </div><!-- /mainApp -->
+
+
+        <!-- ═══════════════════ WRITE MODAL ═══════════════════ -->
         <div id="writeModal" class="modal-overlay">
             <div class="write-modal-content">
-                <button class="modal-close" id="closeWriteBtn">×</button>
-                
+                <button class="modal-close" id="closeWriteBtn" style="color:rgba(255,255,255,0.55);">×</button>
+
                 <div class="write-modal-header">
-                    <h2>YOUR REFLECTION</h2>
+                    <h2>Your Reflection</h2>
+                    <p>For the archive &mdash; in your own words</p>
                 </div>
 
                 <div class="prompts-box">
                     <h3>Starting points if you're stuck:</h3>
-                    <ul>
+                    <ul style="padding-left:16px;">
                         <li>what would you tell yourself at 18?</li>
                         <li>what lesson took way too long to learn?</li>
-                        <li>what's the best advice you got (that you actually followed)?</li>
+                        <li>what's the best advice you got — that you actually followed?</li>
                         <li>what did you think mattered that… really doesn't?</li>
                         <li>what surprised you most about your 20s so far?</li>
-                        <li>what do you know now that you wish you knew sooner?</li>
+                        <li>what do you know now that you wish you'd known sooner?</li>
                     </ul>
                 </div>
 
                 <label class="write-label">Write your reflection:</label>
                 <textarea id="reflectionText" class="write-textarea" placeholder="just be real. that's the whole point."></textarea>
-                
-                <div id="overthinkingMsg" class="overthinking-msg" style="display: none;"></div>
-                
+
+                <div id="overthinkingMsg" class="overthinking-msg" style="display:none;"></div>
+
                 <div class="write-footer">
-                    <button id="cancelWriteBtn" class="vote-btn nein">CANCEL</button>
-                    <button id="saveReflectionBtn" class="vote-btn ja">SUBMIT</button>
+                    <button id="cancelWriteBtn" class="vote-btn nein">Cancel</button>
+                    <button id="saveReflectionBtn" class="vote-btn ja">Submit</button>
                 </div>
             </div>
         </div>
 
-        <!-- Read Modal -->
+
+        <!-- ═══════════════════ READ MODAL ═══════════════════ -->
         <div id="readModal" class="modal-overlay">
             <div class="read-modal-content">
-                <button class="modal-close" id="closeReadBtn">×</button>
-                
+                <button class="modal-close" id="closeReadBtn" style="color:var(--ink);">×</button>
+
                 <div class="read-modal-header">
                     <div class="read-modal-name" id="readModalName"></div>
                     <div class="read-modal-date" id="readModalDate"></div>
                 </div>
-                
+
                 <div class="read-modal-body" id="readModalContent"></div>
             </div>
         </div>
-    </div>
+
+    </div><!-- /page-wrapper -->
 
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="module">
@@ -983,7 +1491,7 @@
         emailjs.init(EMAILJS_CONFIG.publicKey);
 
         const SETUP_PASSWORD = 'setup25';
-        
+
         let state = {
             friends: [],
             reflections: {},
@@ -1030,7 +1538,7 @@
                 state.reflections = data.reflections || {};
                 state.editCounts = data.editCounts || {};
                 state.hasPostedFirst = data.hasPostedFirst || {};
-                
+
                 if (state.currentUser) renderTimeline();
             }
         });
@@ -1054,7 +1562,6 @@
         function hasBirthdayPassed(birthday, today) {
             const [bDay, bMonth] = birthday.split('/').map(Number);
             const [tDay, tMonth] = today.split('/').map(Number);
-            
             if (bMonth < tMonth) return true;
             if (bMonth > tMonth) return false;
             return bDay <= tDay;
@@ -1098,14 +1605,29 @@
         function showApp() {
             document.getElementById('landing').classList.add('hidden');
             document.getElementById('mainApp').classList.remove('hidden');
-            
+
             const navTabs = document.getElementById('navTabs');
+
             if (state.isSetupMode) {
-                navTabs.innerHTML = '<button class="nav-tab active" data-tab="setup">SETUP</button>';
+                navTabs.innerHTML = `
+                    <div class="app-section-label">Registry Admin</div>
+                    <div class="app-section-tabs">
+                        <button class="nav-tab active" data-tab="setup">Setup</button>
+                    </div>
+                `;
             } else {
-                navTabs.innerHTML = '<button class="nav-tab active" data-tab="timeline">THE ARCHIVE</button>';
+                navTabs.innerHTML = `
+                    <div class="app-section-label">Section</div>
+                    <div class="app-section-tabs">
+                        <button class="nav-tab active" data-tab="timeline">The Archive</button>
+                    </div>
+                    <button class="app-back-btn" id="appExitBtn">← Exit</button>
+                `;
+                setTimeout(() => {
+                    document.getElementById('appExitBtn')?.addEventListener('click', logout);
+                }, 0);
             }
-            
+
             document.querySelectorAll('.nav-tab').forEach(tab => {
                 tab.addEventListener('click', function() {
                     showTab(this.dataset.tab);
@@ -1125,10 +1647,10 @@
         function showTab(tabName) {
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            
+
             const selectedTab = document.querySelector(`[data-tab="${tabName}"]`);
             if (selectedTab) selectedTab.classList.add('active');
-            
+
             document.getElementById(tabName + 'Tab').classList.add('active');
 
             if (tabName === 'timeline') renderTimeline();
@@ -1142,46 +1664,52 @@
             if (state.friends.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <div class="empty-icon">📋</div>
-                        <p>NO ENTRIES YET</p>
-                        <p style="margin-top: 10px; font-size: 1rem; font-family: 'Libre Franklin', sans-serif;">Set things up first.</p>
+                        <span class="empty-icon">◇</span>
+                        <p>No entries yet in the archive.</p>
                     </div>
                 `;
                 return;
             }
 
-            container.innerHTML = state.friends.map((friend, index) => {
+            container.innerHTML = state.friends.map((friend) => {
                 const reflection = state.reflections[friend.name];
                 const hasReflection = !!reflection;
                 const birthdayPassed = hasBirthdayPassed(normalizeDate(friend.birthday), today);
                 const isCurrentUser = state.currentUser && state.currentUser.name === friend.name;
 
+                const statusText = hasReflection
+                    ? '✦ Reflection on file'
+                    : birthdayPassed
+                        ? (isCurrentUser ? '◇ Your turn to write' : '◇ Awaiting submission')
+                        : `◻ Sealed until ${friend.birthday}`;
+
+                const previewContent = hasReflection
+                    ? `<div class="card-preview">"${reflection}"</div>
+                       ${!isCurrentUser ? '<div class="read-more">— Read Full Entry —</div>' : ''}`
+                    : birthdayPassed
+                        ? `<div class="card-preview pending">${isCurrentUser ? 'Click to write your reflection' : `Awaiting ${friend.name}…`}</div>`
+                        : `<div class="card-preview pending">Sealed until ${friend.birthday}</div>`;
+
+                const clickAction = isCurrentUser
+                    ? 'window.openWriteModal()'
+                    : (hasReflection ? `window.openReadModal('${friend.name.replace(/'/g, "\\'")}', '${friend.birthday}')` : '');
+
                 return `
-                    <div class="character-card ${!birthdayPassed ? 'locked' : ''}" 
-                         onclick="${isCurrentUser ? 'window.openWriteModal()' : (hasReflection ? `window.openReadModal('${friend.name.replace(/'/g, "\\'")}', '${friend.birthday}')` : '')}">
-                        
-                        ${isCurrentUser && !hasReflection ? '<div class="card-badge">YOUR TURN</div>' : ''}
-                        ${isCurrentUser && hasReflection ? '<div class="card-badge">EDIT</div>' : ''}
-                        
-                        <div class="card-portrait">
-                            <span>${hasReflection ? '✓' : '?'}</span>
+                    <div class="character-card ${!birthdayPassed ? 'locked' : ''}"
+                         ${clickAction ? `onclick="${clickAction}"` : ''}>
+
+                        ${isCurrentUser && !hasReflection ? '<div class="card-badge">Your Turn</div>' : ''}
+                        ${isCurrentUser && hasReflection ? '<div class="card-badge">Edit</div>' : ''}
+
+                        <div class="card-category">${birthdayPassed ? 'Quarter-Life Pages' : 'Forthcoming'}</div>
+                        <div class="card-inner">
+                            <div class="card-monogram">${friend.name.charAt(0).toUpperCase()}</div>
+                            <div class="card-name">${friend.name}${isCurrentUser ? ' (You)' : ''}</div>
+                            <div class="card-date">Born ${friend.birthday}</div>
+                            <hr class="card-divider">
+                            ${previewContent}
+                            <div class="card-status">${statusText}</div>
                         </div>
-                        
-                        <div class="card-name">${friend.name}${isCurrentUser ? ' (YOU)' : ''}</div>
-                        <div class="card-date">${friend.birthday}</div>
-                        
-                        ${hasReflection ? `
-                            <div class="card-preview">${reflection}</div>
-                            ${!isCurrentUser ? '<div class="read-more">[ READ FULL ]</div>' : ''}
-                        ` : birthdayPassed ? `
-                            <div class="card-preview">
-                                ${isCurrentUser ? 'Click to write' : `Awaiting ${friend.name}...`}
-                            </div>
-                        ` : `
-                            <div class="card-preview">
-                                SEALED UNTIL ${friend.birthday}
-                            </div>
-                        `}
                     </div>
                 `;
             }).join('');
@@ -1189,20 +1717,20 @@
 
         function openWriteModal() {
             if (!state.currentUser) return;
-            
+
             const existing = state.reflections[state.currentUser.name] || '';
             document.getElementById('reflectionText').value = existing;
-            
+
             const editCount = state.editCounts[state.currentUser.name] || 0;
             const msgDiv = document.getElementById('overthinkingMsg');
-            
+
             if (editCount >= 3) {
                 msgDiv.textContent = `overthinking detected. it's fine, it doesn't need to be perfect ${state.currentUser.name}`;
                 msgDiv.style.display = 'block';
             } else {
                 msgDiv.style.display = 'none';
             }
-            
+
             document.getElementById('writeModal').classList.add('active');
         }
 
@@ -1213,7 +1741,7 @@
         function openReadModal(friendName, birthday) {
             const reflection = state.reflections[friendName];
             if (!reflection) return;
-            
+
             document.getElementById('readModalName').textContent = friendName;
             document.getElementById('readModalDate').textContent = birthday;
             document.getElementById('readModalContent').textContent = reflection;
@@ -1226,39 +1754,25 @@
 
         async function saveReflection() {
             const text = document.getElementById('reflectionText').value.trim();
-            
-            if (!text) {
-                alert('write something first!');
-                return;
-            }
 
-            if (!state.currentUser) {
-                alert('something went wrong. try logging in again.');
-                return;
-            }
+            if (!text) { alert('write something first!'); return; }
+            if (!state.currentUser) { alert('something went wrong. try logging in again.'); return; }
 
             const isFirstPost = !state.hasPostedFirst[state.currentUser.name];
-            
+
             state.reflections[state.currentUser.name] = text;
-            
-            if (!state.editCounts[state.currentUser.name]) {
-                state.editCounts[state.currentUser.name] = 0;
-            }
+
+            if (!state.editCounts[state.currentUser.name]) state.editCounts[state.currentUser.name] = 0;
             state.editCounts[state.currentUser.name]++;
-            
-            if (isFirstPost) {
-                state.hasPostedFirst[state.currentUser.name] = true;
-            }
-            
+
+            if (isFirstPost) state.hasPostedFirst[state.currentUser.name] = true;
+
             await saveData();
-            
-            if (isFirstPost) {
-                sendNewReflectionEmails();
-            }
-            
+
+            if (isFirstPost) sendNewReflectionEmails();
+
             closeWriteModal();
             renderTimeline();
-            
             alert('reflection saved.');
         }
 
@@ -1280,7 +1794,6 @@
 
         function sendNewReflectionEmails() {
             const today = getToday();
-            
             const eligibleFriends = state.friends.filter(friend => {
                 const birthdayPassed = hasBirthdayPassed(normalizeDate(friend.birthday), today);
                 const isNotCurrentUser = friend.name !== state.currentUser.name;
@@ -1306,7 +1819,6 @@
 
         function checkBirthdays() {
             const today = getToday();
-            
             state.friends.forEach(friend => {
                 if (normalizeDate(friend.birthday) === today && friend.email) {
                     const sentKey = `birthday-sent-${friend.name}-${today}`;
@@ -1320,7 +1832,7 @@
 
         function renderSetup() {
             const container = document.getElementById('friendsList');
-            
+
             if (state.friends.length === 0) {
                 state.friends.push({ name: '', birthday: '', email: '' });
             }
@@ -1363,7 +1875,7 @@
 
         async function saveSetup() {
             state.friends = state.friends.filter(f => f.name && f.birthday);
-            
+
             if (state.friends.length === 0) {
                 alert('add at least one person!');
                 state.friends.push({ name: '', birthday: '', email: '' });
@@ -1374,21 +1886,20 @@
             state.friends.sort((a, b) => {
                 const [aDay, aMonth] = normalizeDate(a.birthday).split('/').map(Number);
                 const [bDay, bMonth] = normalizeDate(b.birthday).split('/').map(Number);
-                
                 if (aMonth !== bMonth) return aMonth - bMonth;
                 return aDay - bDay;
             });
 
             await saveData();
-            
+
             const missingEmails = state.friends.filter(f => !f.email).length;
-            let message = 'Registry locked! Access codes:\n\n' + 
+            let message = 'Registry locked! Access codes:\n\n' +
                 state.friends.map(f => `${f.name}: ${generatePassword(f.name, f.birthday)}`).join('\n');
-            
+
             if (missingEmails > 0) {
                 message += `\n\n⚠️ ${missingEmails} missing emails - no notifications`;
             }
-            
+
             alert(message);
             renderSetup();
         }
@@ -1405,7 +1916,7 @@
             document.getElementById('cancelWriteBtn')?.addEventListener('click', closeWriteModal);
             document.getElementById('saveReflectionBtn')?.addEventListener('click', saveReflection);
             document.getElementById('closeReadBtn')?.addEventListener('click', closeReadModal);
-            
+
             checkBirthdays();
             setInterval(checkBirthdays, 60 * 60 * 1000);
         });
