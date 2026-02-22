@@ -577,29 +577,6 @@
             opacity: 0.55;
         }
 
-        /* ── PAGE-FLIP TRANSITION ── */
-        @keyframes gazette-flip-out {
-            0%   { transform: perspective(1400px) rotateY(0deg);   opacity: 1; }
-            100% { transform: perspective(1400px) rotateY(-90deg); opacity: 0; }
-        }
-
-        @keyframes gazette-flip-in {
-            0%   { transform: perspective(1400px) rotateY(90deg);  opacity: 0; }
-            100% { transform: perspective(1400px) rotateY(0deg);   opacity: 1; }
-        }
-
-        .newspaper.turning-out {
-            animation: gazette-flip-out 0.48s cubic-bezier(0.55, 0, 1, 0.45) forwards;
-            transform-origin: center center;
-            backface-visibility: hidden;
-        }
-
-        .app-newspaper.turning-in {
-            animation: gazette-flip-in 0.48s cubic-bezier(0, 0.55, 0.45, 1) backwards;
-            transform-origin: center center;
-            backface-visibility: hidden;
-        }
-
         /* ── APP VIEW ── */
         .hidden { display: none; }
 
@@ -1990,49 +1967,36 @@
         });
 
         function showApp() {
-            const landing = document.getElementById('landing');
-            const mainApp = document.getElementById('mainApp');
+            document.getElementById('landing').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
 
-            // Flip the front page away
-            landing.querySelector('.newspaper').classList.add('turning-out');
+            const navTabs = document.getElementById('navTabs');
 
-            setTimeout(() => {
-                landing.classList.add('hidden');
-                mainApp.classList.remove('hidden');
+            if (state.isSetupMode) {
+                navTabs.innerHTML = `
+                    <div class="app-section-label">Registry Admin</div>
+                    <div class="app-section-tabs">
+                        <button class="nav-tab active" data-tab="setup">Setup</button>
+                    </div>
+                `;
+            } else {
+                navTabs.innerHTML = `
+                    <div class="app-section-label">Section</div>
+                    <div class="app-section-tabs">
+                        <button class="nav-tab active" data-tab="timeline">The Archive</button>
+                    </div>
+                    <button class="app-back-btn" id="appExitBtn">← Exit</button>
+                `;
+                setTimeout(() => {
+                    document.getElementById('appExitBtn')?.addEventListener('click', logout);
+                }, 0);
+            }
 
-                // Flip the inside page in
-                const insidePaper = mainApp.querySelector('.app-newspaper');
-                insidePaper.classList.add('turning-in');
-                setTimeout(() => insidePaper.classList.remove('turning-in'), 500);
-
-                const navTabs = document.getElementById('navTabs');
-
-                if (state.isSetupMode) {
-                    navTabs.innerHTML = `
-                        <div class="app-section-label">Registry Admin</div>
-                        <div class="app-section-tabs">
-                            <button class="nav-tab active" data-tab="setup">Setup</button>
-                        </div>
-                    `;
-                } else {
-                    navTabs.innerHTML = `
-                        <div class="app-section-label">Section</div>
-                        <div class="app-section-tabs">
-                            <button class="nav-tab active" data-tab="timeline">The Archive</button>
-                        </div>
-                        <button class="app-back-btn" id="appExitBtn">← Exit</button>
-                    `;
-                    setTimeout(() => {
-                        document.getElementById('appExitBtn')?.addEventListener('click', logout);
-                    }, 0);
-                }
-
-                document.querySelectorAll('.nav-tab').forEach(tab => {
-                    tab.addEventListener('click', function() {
-                        showTab(this.dataset.tab);
-                    });
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    showTab(this.dataset.tab);
                 });
-            }, 450);
+            });
         }
 
         function logout() {
