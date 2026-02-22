@@ -1384,24 +1384,25 @@
 
         /* ── Portrait image area ── */
         .card-portrait-wrap {
-            flex: 1;
             position: relative;
             overflow: hidden;
-            min-height: 175px;
+            aspect-ratio: 5 / 7;
+            width: 100%;
+            background: #72705d;
         }
 
-        /* Subtle ink-fade at bottom of portrait, above image */
-        .card-portrait-wrap::after {
-            content: '';
+        /* Portrait image — always rendered first, visible by default */
+        .card-portrait {
             position: absolute;
-            bottom: 0; left: 0; right: 0;
-            height: 38px;
-            background: linear-gradient(to bottom, transparent, rgba(70,45,20,0.22));
-            pointer-events: none;
-            z-index: 2;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top center;
+            display: block;
         }
 
-        /* Sepia placeholder always sits behind the image */
+        /* Placeholder — hidden by default; shown via onerror inline style */
         .card-portrait-placeholder {
             position: absolute;
             inset: 0;
@@ -1410,7 +1411,6 @@
             align-items: center;
             justify-content: center;
             background: radial-gradient(ellipse at 50% 35%, #8f8d78 0%, #72705d 55%, #595748 100%);
-            z-index: 0;
         }
 
         /* Grain texture on placeholder */
@@ -1456,15 +1456,14 @@
             z-index: 1;
         }
 
-        /* Actual portrait image — sits on top of placeholder */
-        .card-portrait {
+        /* Ink-fade overlay at bottom of portrait area */
+        .card-portrait-wrap::after {
+            content: '';
             position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: top center;
-            display: block;
+            bottom: 0; left: 0; right: 0;
+            height: 38px;
+            background: linear-gradient(to bottom, transparent, rgba(70,45,20,0.22));
+            pointer-events: none;
             z-index: 1;
         }
 
@@ -2126,14 +2125,14 @@
                         </div>
 
                         <div class="card-portrait-wrap">
-                            <div class="card-portrait-placeholder">
-                                <div class="placeholder-monogram">${initial}</div>
-                                <div class="placeholder-label">Portrait Pending</div>
-                            </div>
                             <img class="card-portrait"
                                  src="${imageSrc}"
                                  alt="${friend.name}"
-                                 onerror="this.style.display='none'">
+                                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                            <div class="card-portrait-placeholder" style="display:none">
+                                <div class="placeholder-monogram">${initial}</div>
+                                <div class="placeholder-label">Portrait Pending</div>
+                            </div>
                         </div>
 
                         <div class="card-footer">
