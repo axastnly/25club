@@ -1309,6 +1309,154 @@
             z-index: 1;
         }
 
+        /* ── Game Board ── */
+        .game-board-section {
+            margin-bottom: 22px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .board-wrapper {
+            position: relative;
+            width: 100%;
+            line-height: 0;
+        }
+
+        .board-bg {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 3px;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.55);
+        }
+
+        /* Overlay positioned exactly over inner rect: x=111.5,y=58.5,w=408,h=141 in a 632×257 SVG */
+        .board-slots {
+            position: absolute;
+            left: 17.64%;
+            top: 22.76%;
+            width: 64.56%;
+            height: 54.86%;
+            display: flex;
+            gap: 0;
+        }
+
+        .policy-slot {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: default;
+        }
+
+        .policy-slot.clickable {
+            cursor: pointer;
+        }
+
+        .policy-card {
+            width: 84%;
+            height: 84%;
+            border-radius: 3px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .policy-card.filled {
+            box-shadow: 0 3px 10px rgba(0,0,0,0.55), inset 0 0 0 1.5px rgba(255,255,255,0.22);
+        }
+
+        .policy-card.filled.liberal {
+            background: linear-gradient(160deg, #8ac4dc 0%, #4980a0 50%, #274f6e 100%);
+            border: 2px solid #3a6a8a;
+        }
+
+        .policy-card.filled.fascist {
+            background: linear-gradient(160deg, #d08060 0%, #9a4020 50%, #6a1e08 100%);
+            border: 2px solid #8a3a22;
+        }
+
+        .policy-slot.clickable:hover .policy-card.filled {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.65), inset 0 0 0 1.5px rgba(255,255,255,0.3);
+        }
+
+        .policy-slot.clickable:hover .policy-card:not(.filled) {
+            background: rgba(255,255,255,0.1);
+            border: 1.5px dashed rgba(255,255,255,0.2);
+        }
+
+        .policy-card-inner {
+            width: 80%;
+            height: 80%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255,255,255,0.2);
+            gap: 3px;
+        }
+
+        .policy-card-word {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.45rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            line-height: 1.2;
+            text-align: center;
+        }
+
+        .policy-card.filled.liberal .policy-card-word { color: #cce8f8; }
+        .policy-card.filled.fascist .policy-card-word { color: #f0cca8; }
+
+        .board-admin-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            margin-top: 10px;
+            min-height: 30px;
+        }
+
+        .board-policy-count {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.68rem;
+            letter-spacing: 3px;
+            color: rgba(240,230,204,0.5);
+            text-transform: uppercase;
+            min-width: 130px;
+            text-align: center;
+        }
+
+        .board-policy-btn {
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.14);
+            color: rgba(240,230,204,0.65);
+            width: 28px;
+            height: 28px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.18s;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .board-policy-btn:hover {
+            background: rgba(255,255,255,0.15);
+            color: rgba(240,230,204,0.95);
+        }
+
+        .board-policy-btn:disabled {
+            opacity: 0.3;
+            cursor: default;
+        }
+
         /* ── Character cards — vintage portrait playing-card style ── */
         #mainApp .timeline {
             display: grid;
@@ -1801,6 +1949,36 @@
                     </div>
                 </div>
 
+                <!-- Board tab -->
+                <div id="boardTab" class="tab-content">
+                    <div class="sh-board-panel">
+                        <div class="sh-title-row">
+                            <div class="sh-title-arrows">»»»</div>
+                            <div class="sh-title-text">The Board</div>
+                            <div class="sh-title-arrows">«««</div>
+                        </div>
+                        <div class="sh-rule"></div>
+
+                        <div class="game-board-section">
+                            <div class="board-wrapper">
+                                <img src="Liberal%20board.svg" class="board-bg" alt="Liberal Board">
+                                <div class="board-slots" id="liberalSlots"></div>
+                            </div>
+                            <div class="board-admin-bar" id="liberalAdminBar"></div>
+                        </div>
+
+                        <div class="game-board-section">
+                            <div class="board-wrapper">
+                                <img src="Fascist%20board.svg" class="board-bg" alt="Fascist Board">
+                                <div class="board-slots" id="fascistSlots"></div>
+                            </div>
+                            <div class="board-admin-bar" id="fascistAdminBar"></div>
+                        </div>
+
+                        <div class="sh-board-footer">The 25 Club &nbsp;·&nbsp; Policy Board &nbsp;·&nbsp; Est. 2025</div>
+                    </div>
+                </div>
+
                 <!-- Setup tab -->
                 <div id="setupTab" class="tab-content">
                     <div class="sh-board-panel">
@@ -1913,7 +2091,8 @@
             currentUser: null,
             isSetupMode: false,
             editCounts: {},
-            hasPostedFirst: {}
+            hasPostedFirst: {},
+            boardState: { liberal: 0, fascist: 0 }
         };
 
         async function loadData() {
@@ -1925,6 +2104,7 @@
                     state.reflections = data.reflections || {};
                     state.editCounts = data.editCounts || {};
                     state.hasPostedFirst = data.hasPostedFirst || {};
+                    state.boardState = data.boardState || { liberal: 0, fascist: 0 };
                 }
             } catch (error) {
                 console.error('Error loading:', error);
@@ -1938,6 +2118,7 @@
                     reflections: state.reflections,
                     editCounts: state.editCounts,
                     hasPostedFirst: state.hasPostedFirst,
+                    boardState: state.boardState,
                     lastUpdated: new Date().toISOString()
                 });
             } catch (error) {
@@ -1953,8 +2134,12 @@
                 state.reflections = data.reflections || {};
                 state.editCounts = data.editCounts || {};
                 state.hasPostedFirst = data.hasPostedFirst || {};
+                state.boardState = data.boardState || { liberal: 0, fascist: 0 };
 
-                if (state.currentUser) renderTimeline();
+                if (state.currentUser) {
+                    renderTimeline();
+                    if (document.getElementById('boardTab')?.classList.contains('active')) renderBoard();
+                }
             }
         });
 
@@ -2035,6 +2220,7 @@
                     <div class="app-section-label">Section</div>
                     <div class="app-section-tabs">
                         <button class="nav-tab active" data-tab="timeline">The Archive</button>
+                        <button class="nav-tab" data-tab="board">The Board</button>
                     </div>
                     <button class="app-back-btn" id="appExitBtn">← Exit</button>
                 `;
@@ -2070,6 +2256,7 @@
 
             if (tabName === 'timeline') renderTimeline();
             if (tabName === 'setup') renderSetup();
+            if (tabName === 'board') renderBoard();
         }
 
         const PORTRAIT_IMAGES = {
@@ -2260,6 +2447,94 @@
                     }
                 }
             });
+        }
+
+        function renderBoard() {
+            const bs = state.boardState || { liberal: 0, fascist: 0 };
+            const MAX_SLOTS = 4;
+
+            function buildSlots(containerId, count, type) {
+                const container = document.getElementById(containerId);
+                if (!container) return;
+                container.innerHTML = '';
+                for (let i = 0; i < MAX_SLOTS; i++) {
+                    const slot = document.createElement('div');
+                    const isFilled = i < count;
+                    slot.className = 'policy-slot' + (state.isSetupMode ? ' clickable' : '');
+                    slot.dataset.index = i;
+
+                    const card = document.createElement('div');
+                    card.className = 'policy-card' + (isFilled ? ' filled ' + type : '');
+
+                    if (isFilled) {
+                        const inner = document.createElement('div');
+                        inner.className = 'policy-card-inner';
+                        const word = document.createElement('div');
+                        word.className = 'policy-card-word';
+                        word.innerHTML = type.toUpperCase() + '<br>POLICY';
+                        inner.appendChild(word);
+                        card.appendChild(inner);
+                    }
+
+                    slot.appendChild(card);
+
+                    if (state.isSetupMode) {
+                        slot.addEventListener('click', async () => {
+                            const clickedIndex = parseInt(slot.dataset.index);
+                            // clicking last filled slot empties it; clicking any other slot fills up to it
+                            const newCount = (clickedIndex === count - 1) ? count - 1 : clickedIndex + 1;
+                            state.boardState[type] = Math.max(0, Math.min(MAX_SLOTS, newCount));
+                            await saveData();
+                            renderBoard();
+                        });
+                    }
+
+                    container.appendChild(slot);
+                }
+            }
+
+            function buildAdminBar(barId, type, count) {
+                const bar = document.getElementById(barId);
+                if (!bar) return;
+                const label = type === 'liberal' ? 'Liberal' : 'Fascist';
+                const countEl = document.createElement('div');
+                countEl.className = 'board-policy-count';
+                countEl.textContent = `${label}  ${count} / ${MAX_SLOTS}`;
+
+                bar.innerHTML = '';
+                if (state.isSetupMode) {
+                    const minus = document.createElement('button');
+                    minus.className = 'board-policy-btn';
+                    minus.textContent = '−';
+                    minus.disabled = count === 0;
+                    minus.addEventListener('click', async () => {
+                        state.boardState[type] = Math.max(0, count - 1);
+                        await saveData();
+                        renderBoard();
+                    });
+
+                    const plus = document.createElement('button');
+                    plus.className = 'board-policy-btn';
+                    plus.textContent = '+';
+                    plus.disabled = count === MAX_SLOTS;
+                    plus.addEventListener('click', async () => {
+                        state.boardState[type] = Math.min(MAX_SLOTS, count + 1);
+                        await saveData();
+                        renderBoard();
+                    });
+
+                    bar.appendChild(minus);
+                    bar.appendChild(countEl);
+                    bar.appendChild(plus);
+                } else {
+                    bar.appendChild(countEl);
+                }
+            }
+
+            buildSlots('liberalSlots', bs.liberal, 'liberal');
+            buildSlots('fascistSlots', bs.fascist, 'fascist');
+            buildAdminBar('liberalAdminBar', 'liberal', bs.liberal);
+            buildAdminBar('fascistAdminBar', 'fascist', bs.fascist);
         }
 
         function renderSetup() {
