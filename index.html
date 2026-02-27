@@ -868,8 +868,8 @@
         }
 
         .write-modal-content {
-            background: linear-gradient(145deg, #60483a 0%, #7d6050 50%, #60483a 100%);
-            border: 2px solid #36241a;
+            background: linear-gradient(145deg, #2a1608 0%, #3a2010 50%, #2a1608 100%);
+            border: 2px solid #5a2e18;
             max-width: 700px;
             width: 100%;
             max-height: 88vh;
@@ -1146,14 +1146,13 @@
 
         /* ── Board container ── */
         #mainApp .app-newspaper {
-            background: #0d0303;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E");
-            border: 5px solid #6b1515;
+            background: #090b0e;
+            border: 3px solid #2a3a50;
             padding: 0;
             box-shadow:
-                0 0 0 2px #3a0808,
-                8px 8px 0 rgba(0,0,0,0.5),
-                0 28px 70px rgba(0,0,0,0.7);
+                0 0 0 1px #1a2a3c,
+                8px 8px 0 rgba(0,0,0,0.55),
+                0 28px 70px rgba(0,0,0,0.65);
         }
 
         /* Suppress newspaper paper-line texture in app */
@@ -1161,8 +1160,8 @@
 
         /* ── Masthead bar ── */
         #mainApp .app-masthead-row {
-            background: linear-gradient(to right, #1a0404, #2a0808, #1a0404);
-            border-bottom: 2px solid #6b1515;
+            background: linear-gradient(to right, #0d1e32, #16283e, #0d1e32);
+            border-bottom: 2px solid #2a4060;
             padding: 14px 24px;
         }
 
@@ -1172,7 +1171,7 @@
             font-weight: 700;
             letter-spacing: 10px;
             color: #f0e6cc;
-            text-shadow: 2px 2px 0 rgba(0,0,0,0.5), 0 0 25px rgba(180,40,40,0.3);
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.55), 0 0 28px rgba(102,159,189,0.35);
         }
 
         #mainApp .app-masthead-side {
@@ -1187,9 +1186,9 @@
 
         /* ── Section / nav bar ── */
         #mainApp .app-section-bar {
-            background: linear-gradient(to right, #350808, #5a1010, #350808);
-            border-top: 2px solid #8b2222;
-            border-bottom: 2px solid #8b2222;
+            background: linear-gradient(90deg, #14223a 0%, #181510 50%, #28120a 100%);
+            border-top: 1px solid rgba(49,69,102,0.9);
+            border-bottom: 1px solid rgba(107,45,43,0.9);
             margin: 0;
         }
 
@@ -1209,8 +1208,8 @@
         }
 
         #mainApp .nav-tab:hover {
-            background: rgba(255,255,255,0.06);
-            color: rgba(240,230,204,0.85);
+            background: rgba(102,159,189,0.14);
+            color: rgba(240,230,204,0.9);
         }
 
         #mainApp .nav-tab.active {
@@ -1227,14 +1226,14 @@
         }
 
         #mainApp .app-back-btn:hover {
-            color: rgba(240,230,204,0.85);
-            background: rgba(255,255,255,0.06);
+            color: rgba(240,230,204,0.9);
+            background: rgba(102,159,189,0.14);
         }
 
         /* ── Board panel (behind the cards) ── */
         .sh-board-panel {
             background:
-                radial-gradient(ellipse at 50% 0%, #5a1010 0%, #3a0808 45%, #200606 100%);
+                radial-gradient(ellipse at 50% -10%, #181614 0%, #0f0d0b 55%, #080706 100%);
             padding: 30px 30px 26px;
             position: relative;
         }
@@ -1270,7 +1269,7 @@
         }
 
         .sh-title-arrows {
-            color: rgba(240,230,204,0.22);
+            color: rgba(198,104,78,0.45);
             font-size: 1.3rem;
             letter-spacing: -5px;
             line-height: 1;
@@ -1286,12 +1285,12 @@
             text-transform: uppercase;
             text-shadow:
                 2px 2px 0 rgba(0,0,0,0.55),
-                0 0 30px rgba(180,50,50,0.35);
+                0 0 30px rgba(102,159,189,0.25);
         }
 
         .sh-rule {
             height: 1px;
-            background: linear-gradient(to right, transparent, rgba(240,230,204,0.2), transparent);
+            background: linear-gradient(to right, transparent, rgba(102,159,189,0.3), transparent);
             margin: 12px 0 26px;
             position: relative;
             z-index: 1;
