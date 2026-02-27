@@ -1457,7 +1457,75 @@
             cursor: default;
         }
 
-        /* ── Character cards — vintage portrait playing-card style ── */
+        /* ── Slot cards — portrait cards overlaid on board SVGs ── */
+        .board-slots .slot-card {
+            flex: 1;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.22s ease, box-shadow 0.22s ease;
+            background: #72705d;
+            border: 1.5px solid rgba(255,255,255,0.22);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.55);
+            margin: 0 2px;
+        }
+
+        .board-slots .slot-card:not(.locked):hover {
+            transform: translateY(-8px) scale(1.04);
+            box-shadow: 0 14px 32px rgba(0,0,0,0.75);
+            z-index: 2;
+        }
+
+        .board-slots .slot-card.locked {
+            opacity: 0.4;
+            filter: grayscale(0.85) brightness(0.55);
+            cursor: default;
+        }
+
+        .board-slots .slot-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top center;
+            display: block;
+        }
+
+        .board-slots .slot-badge {
+            position: absolute;
+            top: 3px;
+            right: 3px;
+            background: #8b1a1a;
+            color: #f0e6cc;
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.32rem;
+            letter-spacing: 1.5px;
+            padding: 2px 4px;
+            border-radius: 2px;
+            text-transform: uppercase;
+            z-index: 1;
+        }
+
+        .board-slots .slot-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(ellipse at 50% 35%, #8f8d78 0%, #72705d 55%, #595748 100%);
+        }
+
+        .board-slots .slot-placeholder-initial {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: rgba(240,230,204,0.6);
+            line-height: 1;
+        }
+
+                /* ── Character cards — vintage portrait playing-card style ── */
         #mainApp .timeline {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(185px, 215px));
@@ -1935,26 +2003,12 @@
                 <!-- Nav / section bar — populated by JS -->
                 <div class="app-section-bar" id="navTabs"></div>
 
-                <!-- Archive tab -->
+                <!-- Combined archive + board view -->
                 <div id="timelineTab" class="tab-content active">
                     <div class="sh-board-panel">
                         <div class="sh-title-row">
                             <div class="sh-title-arrows">»»»</div>
                             <div class="sh-title-text">The Archive</div>
-                            <div class="sh-title-arrows">«««</div>
-                        </div>
-                        <div class="sh-rule"></div>
-                        <div class="timeline" id="timelineContainer"></div>
-                        <div class="sh-board-footer">The 25 Club &nbsp;·&nbsp; Private Archive &nbsp;·&nbsp; Est. 2025</div>
-                    </div>
-                </div>
-
-                <!-- Board tab -->
-                <div id="boardTab" class="tab-content">
-                    <div class="sh-board-panel">
-                        <div class="sh-title-row">
-                            <div class="sh-title-arrows">»»»</div>
-                            <div class="sh-title-text">The Board</div>
                             <div class="sh-title-arrows">«««</div>
                         </div>
                         <div class="sh-rule"></div>
@@ -1964,7 +2018,6 @@
                                 <img src="Liberal%20board.svg" class="board-bg" alt="Liberal Board">
                                 <div class="board-slots" id="liberalSlots"></div>
                             </div>
-                            <div class="board-admin-bar" id="liberalAdminBar"></div>
                         </div>
 
                         <div class="game-board-section">
@@ -1972,10 +2025,9 @@
                                 <img src="Fascist%20board.svg" class="board-bg" alt="Fascist Board">
                                 <div class="board-slots" id="fascistSlots"></div>
                             </div>
-                            <div class="board-admin-bar" id="fascistAdminBar"></div>
                         </div>
 
-                        <div class="sh-board-footer">The 25 Club &nbsp;·&nbsp; Policy Board &nbsp;·&nbsp; Est. 2025</div>
+                        <div class="sh-board-footer">The 25 Club &nbsp;·&nbsp; Private Archive &nbsp;·&nbsp; Est. 2025</div>
                     </div>
                 </div>
 
@@ -2138,7 +2190,6 @@
 
                 if (state.currentUser) {
                     renderTimeline();
-                    if (document.getElementById('boardTab')?.classList.contains('active')) renderBoard();
                 }
             }
         });
@@ -2217,11 +2268,7 @@
                 `;
             } else {
                 navTabs.innerHTML = `
-                    <div class="app-section-label">Section</div>
-                    <div class="app-section-tabs">
-                        <button class="nav-tab active" data-tab="timeline">The Archive</button>
-                        <button class="nav-tab" data-tab="board">The Board</button>
-                    </div>
+                    <div class="app-section-label">The Archive</div>
                     <button class="app-back-btn" id="appExitBtn">← Exit</button>
                 `;
                 setTimeout(() => {
@@ -2256,7 +2303,6 @@
 
             if (tabName === 'timeline') renderTimeline();
             if (tabName === 'setup') renderSetup();
-            if (tabName === 'board') renderBoard();
         }
 
         const PORTRAIT_IMAGES = {
@@ -2265,76 +2311,53 @@
         };
 
         function renderTimeline() {
-            const container = document.getElementById('timelineContainer');
             const today = getToday();
+            const liberalSlots = document.getElementById('liberalSlots');
+            const fascistSlots = document.getElementById('fascistSlots');
+            if (!liberalSlots || !fascistSlots) return;
 
-            if (state.friends.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <span class="empty-icon">◇</span>
-                        <p>No entries yet in the archive.</p>
-                    </div>
-                `;
-                return;
+            // Birthday passed → liberal board; sealed → fascist board
+            const unlocked = state.friends.filter(f => hasBirthdayPassed(normalizeDate(f.birthday), today));
+            const sealed   = state.friends.filter(f => !hasBirthdayPassed(normalizeDate(f.birthday), today));
+
+            function buildCards(container, friends) {
+                if (friends.length === 0) {
+                    container.innerHTML = '';
+                    return;
+                }
+                container.innerHTML = friends.map(friend => {
+                    const imgKey   = friend.name.toLowerCase().replace(/\s+/g, '');
+                    const imageSrc = PORTRAIT_IMAGES[imgKey] || null;
+                    const initial  = friend.name.charAt(0).toUpperCase();
+                    const isCurrentUser = state.currentUser && state.currentUser.name === friend.name;
+                    const hasReflection = !!state.reflections[friend.name];
+                    const birthdayPassed = hasBirthdayPassed(normalizeDate(friend.birthday), today);
+
+                    const clickAction = isCurrentUser
+                        ? 'window.openWriteModal()'
+                        : (hasReflection ? `window.openReadModal('${friend.name.replace(/'/g, "\\'")}', '${friend.birthday}')` : '');
+
+                    return `
+                        <div class="slot-card ${!birthdayPassed ? 'locked' : ''}"
+                             ${clickAction ? `onclick="${clickAction}"` : ''}>
+                            ${isCurrentUser && !hasReflection ? '<div class="slot-badge">Your Turn</div>' : ''}
+                            ${isCurrentUser && hasReflection  ? '<div class="slot-badge">Edit</div>'      : ''}
+                            ${imageSrc
+                                ? `<img src="${imageSrc}" alt="${friend.name}">`
+                                : `<div class="slot-placeholder">
+                                       <div class="slot-placeholder-initial">${initial}</div>
+                                   </div>`
+                            }
+                        </div>
+                    `;
+                }).join('');
             }
 
-            container.innerHTML = state.friends.map((friend) => {
-                const reflection = state.reflections[friend.name];
-                const hasReflection = !!reflection;
-                const birthdayPassed = hasBirthdayPassed(normalizeDate(friend.birthday), today);
-                const isCurrentUser = state.currentUser && state.currentUser.name === friend.name;
-
-                const statusText = hasReflection
-                    ? '✦ Reflection on file'
-                    : birthdayPassed
-                        ? (isCurrentUser ? '◇ Your turn to write' : '◇ Awaiting submission')
-                        : `◻ Sealed until ${friend.birthday}`;
-
-                const previewContent = hasReflection
-                    ? `<div class="card-preview">"${reflection}"</div>
-                       ${!isCurrentUser ? '<div class="read-more">— Read Full Entry —</div>' : ''}`
-                    : birthdayPassed
-                        ? `<div class="card-preview pending">${isCurrentUser ? 'Click to write your reflection' : `Awaiting ${friend.name}…`}</div>`
-                        : `<div class="card-preview pending">Sealed until ${friend.birthday}</div>`;
-
-                const clickAction = isCurrentUser
-                    ? 'window.openWriteModal()'
-                    : (hasReflection ? `window.openReadModal('${friend.name.replace(/'/g, "\\'")}', '${friend.birthday}')` : '');
-
-                const imgKey   = friend.name.toLowerCase().replace(/\s+/g, '');
-                const imageSrc = PORTRAIT_IMAGES[imgKey] || null;
-                const initial  = friend.name.charAt(0).toUpperCase();
-
-                return `
-                    <div class="character-card ${!birthdayPassed ? 'locked' : ''}"
-                         ${clickAction ? `onclick="${clickAction}"` : ''}>
-
-                        ${isCurrentUser && !hasReflection ? '<div class="card-badge">Your Turn</div>' : ''}
-                        ${isCurrentUser && hasReflection  ? '<div class="card-badge">Edit</div>'     : ''}
-
-                        <div class="card-header">
-                            <div class="card-category">${birthdayPassed ? 'Member File' : 'Forthcoming'}</div>
-                        </div>
-
-                        <div class="card-portrait-wrap">
-                            ${imageSrc ? `<img class="card-portrait" src="${imageSrc}" alt="${friend.name}">` : ''}
-                            <div class="card-portrait-placeholder" ${imageSrc ? 'style="display:none"' : ''}>
-                                <div class="placeholder-monogram">${initial}</div>
-                                <div class="placeholder-label">Portrait Pending</div>
-                            </div>
-                        </div>
-
-                        <div class="card-footer">
-                            <div class="card-date">Born ${friend.birthday}</div>
-                            <div class="card-status">${statusText}</div>
-                            ${hasReflection && !isCurrentUser ? '<div class="read-more">— Read Full Entry —</div>' : ''}
-                        </div>
-                    </div>
-                `;
-            }).join('');
+            buildCards(liberalSlots, unlocked);
+            buildCards(fascistSlots, sealed);
         }
 
-        function openWriteModal() {
+                function openWriteModal() {
             if (!state.currentUser) return;
 
             const existing = state.reflections[state.currentUser.name] || '';
@@ -2447,94 +2470,6 @@
                     }
                 }
             });
-        }
-
-        function renderBoard() {
-            const bs = state.boardState || { liberal: 0, fascist: 0 };
-            const MAX_SLOTS = 4;
-
-            function buildSlots(containerId, count, type) {
-                const container = document.getElementById(containerId);
-                if (!container) return;
-                container.innerHTML = '';
-                for (let i = 0; i < MAX_SLOTS; i++) {
-                    const slot = document.createElement('div');
-                    const isFilled = i < count;
-                    slot.className = 'policy-slot' + (state.isSetupMode ? ' clickable' : '');
-                    slot.dataset.index = i;
-
-                    const card = document.createElement('div');
-                    card.className = 'policy-card' + (isFilled ? ' filled ' + type : '');
-
-                    if (isFilled) {
-                        const inner = document.createElement('div');
-                        inner.className = 'policy-card-inner';
-                        const word = document.createElement('div');
-                        word.className = 'policy-card-word';
-                        word.innerHTML = type.toUpperCase() + '<br>POLICY';
-                        inner.appendChild(word);
-                        card.appendChild(inner);
-                    }
-
-                    slot.appendChild(card);
-
-                    if (state.isSetupMode) {
-                        slot.addEventListener('click', async () => {
-                            const clickedIndex = parseInt(slot.dataset.index);
-                            // clicking last filled slot empties it; clicking any other slot fills up to it
-                            const newCount = (clickedIndex === count - 1) ? count - 1 : clickedIndex + 1;
-                            state.boardState[type] = Math.max(0, Math.min(MAX_SLOTS, newCount));
-                            await saveData();
-                            renderBoard();
-                        });
-                    }
-
-                    container.appendChild(slot);
-                }
-            }
-
-            function buildAdminBar(barId, type, count) {
-                const bar = document.getElementById(barId);
-                if (!bar) return;
-                const label = type === 'liberal' ? 'Liberal' : 'Fascist';
-                const countEl = document.createElement('div');
-                countEl.className = 'board-policy-count';
-                countEl.textContent = `${label}  ${count} / ${MAX_SLOTS}`;
-
-                bar.innerHTML = '';
-                if (state.isSetupMode) {
-                    const minus = document.createElement('button');
-                    minus.className = 'board-policy-btn';
-                    minus.textContent = '−';
-                    minus.disabled = count === 0;
-                    minus.addEventListener('click', async () => {
-                        state.boardState[type] = Math.max(0, count - 1);
-                        await saveData();
-                        renderBoard();
-                    });
-
-                    const plus = document.createElement('button');
-                    plus.className = 'board-policy-btn';
-                    plus.textContent = '+';
-                    plus.disabled = count === MAX_SLOTS;
-                    plus.addEventListener('click', async () => {
-                        state.boardState[type] = Math.min(MAX_SLOTS, count + 1);
-                        await saveData();
-                        renderBoard();
-                    });
-
-                    bar.appendChild(minus);
-                    bar.appendChild(countEl);
-                    bar.appendChild(plus);
-                } else {
-                    bar.appendChild(countEl);
-                }
-            }
-
-            buildSlots('liberalSlots', bs.liberal, 'liberal');
-            buildSlots('fascistSlots', bs.fascist, 'fascist');
-            buildAdminBar('liberalAdminBar', 'liberal', bs.liberal);
-            buildAdminBar('fascistAdminBar', 'fascist', bs.fascist);
         }
 
         function renderSetup() {
