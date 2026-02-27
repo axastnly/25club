@@ -1407,17 +1407,12 @@
             box-shadow: 0 6px 24px rgba(0,0,0,0.55);
         }
 
-        /* Overlay positioned exactly over inner rect: x=111.5,y=58.5,w=408,h=141 in a 632×257 SVG */
         .board-slots {
-            position: absolute;
-            left: 17.64%;
-            top: 22.76%;
-            width: 64.56%;
-            height: 54.86%;
             display: flex;
-            gap: 4px;
+            gap: 16px;
+            padding: 18px 0 6px;
             overflow-x: auto;
-            overflow-y: hidden;
+            overflow-y: visible;
             scrollbar-width: none;
             cursor: grab;
             user-select: none;
@@ -1425,12 +1420,6 @@
         }
         .board-slots:active { cursor: grabbing; }
         .board-slots::-webkit-scrollbar { display: none; }
-
-        /* Fascist board has wider slot area: x=55.5, w=520 in 632px SVG */
-        #fascistSlots {
-            left: 8.78%;
-            width: 82.28%;
-        }
 
         .policy-slot {
             flex: 1;
@@ -1548,59 +1537,54 @@
             cursor: default;
         }
 
-        /* ── Slot cards — portrait cards overlaid on board SVGs ── */
-        .board-slots .slot-card {
-            flex-shrink: 0;
-            height: 100%;
-            aspect-ratio: 5 / 7;
-            position: relative;
-            overflow: hidden;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: transform 0.22s ease, box-shadow 0.22s ease;
-            background: #72705d;
-            border: 1.5px solid rgba(255,255,255,0.22);
-            box-shadow: 0 4px 14px rgba(0,0,0,0.55);
-        }
-
-        .board-slots .slot-card:not(.locked):hover {
-            transform: translateY(-8px) scale(1.04);
-            box-shadow: 0 14px 32px rgba(0,0,0,0.75);
-            z-index: 2;
-        }
-
-        .board-slots .slot-card.locked {
-            opacity: 0.4;
-            filter: grayscale(0.85) brightness(0.55);
-            cursor: default;
-        }
-
-        .board-slots .slot-card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: top center;
-            display: block;
-        }
-
+        /* slot-card → now uses character-card; see .board-slots .character-card below */
         .board-slots .slot-badge {
             position: absolute;
-            top: 3px;
-            right: 3px;
+            top: 6px;
+            right: 6px;
             background: #8b1a1a;
             color: #f0e6cc;
             font-family: 'Oswald', sans-serif;
-            font-size: 0.32rem;
+            font-size: 0.38rem;
             letter-spacing: 1.5px;
-            padding: 2px 4px;
+            padding: 3px 5px;
             border-radius: 2px;
             text-transform: uppercase;
-            z-index: 1;
+            z-index: 3;
         }
 
-        .board-slots .slot-card.chancellor {
-            border-color: rgba(240,200,70,0.75);
-            box-shadow: 0 0 0 1.5px rgba(240,200,70,0.45), 0 4px 14px rgba(0,0,0,0.55);
+        /* Chancellor card — gold border */
+        .board-slots .character-card.chancellor-card {
+            border-color: rgba(200,168,60,0.8);
+            box-shadow:
+                inset 0 0 0 2px rgba(255,255,255,0.55),
+                0 0 0 2px rgba(200,168,60,0.35),
+                0 14px 36px rgba(0,0,0,0.7);
+        }
+
+        /* Awaiting — unlocked but no reflection yet */
+        .board-slots .character-card.awaiting { cursor: default; }
+        .board-slots .character-card.awaiting .card-portrait { opacity: 0.3; }
+        .board-slots .character-card.awaiting .card-portrait-placeholder { opacity: 0.3; }
+
+        .awaiting-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .awaiting-label {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.5rem;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: rgba(90,18,18,0.7);
+            background: rgba(240,230,204,0.88);
+            padding: 5px 12px;
+            border: 1px solid rgba(90,18,18,0.18);
         }
 
         .slot-chancellor-band {
@@ -1620,22 +1604,9 @@
             z-index: 2;
         }
 
-        .board-slots .slot-placeholder {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: radial-gradient(ellipse at 50% 35%, #8f8d78 0%, #72705d 55%, #595748 100%);
-        }
-
-        .board-slots .slot-placeholder-initial {
-            font-family: 'Oswald', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: rgba(240,230,204,0.6);
-            line-height: 1;
+        /* board-slots character-cards: fixed width in scroll context */
+        .board-slots .character-card {
+            flex: 0 0 175px;
         }
 
                 /* ── Character cards — vintage portrait playing-card style ── */
@@ -2114,15 +2085,15 @@
                         <div class="game-board-section">
                             <div class="board-wrapper">
                                 <img src="Liberal%20board.svg" class="board-bg" alt="Liberal Board">
-                                <div class="board-slots" id="liberalSlots"></div>
                             </div>
+                            <div class="board-slots" id="liberalSlots"></div>
                         </div>
 
                         <div class="game-board-section">
                             <div class="board-wrapper">
                                 <img src="Fascist%20board.svg" class="board-bg" alt="Fascist Board">
-                                <div class="board-slots" id="fascistSlots"></div>
                             </div>
+                            <div class="board-slots" id="fascistSlots"></div>
                         </div>
 
                         <div class="sh-board-footer">The 25 Club &nbsp;·&nbsp; Private Archive &nbsp;·&nbsp; Est. 2026</div>
@@ -2427,29 +2398,50 @@
                     return;
                 }
                 container.innerHTML = friends.map(friend => {
-                    const imgKey   = friend.name.toLowerCase().replace(/\s+/g, '');
-                    const imageSrc = PORTRAIT_IMAGES[imgKey] || null;
-                    const initial  = friend.name.charAt(0).toUpperCase();
+                    const imgKey        = friend.name.toLowerCase().replace(/\s+/g, '');
+                    const imageSrc      = PORTRAIT_IMAGES[imgKey] || null;
+                    const initial       = friend.name.charAt(0).toUpperCase();
                     const isCurrentUser = state.currentUser && state.currentUser.name === friend.name;
                     const hasReflection = !!state.reflections[friend.name];
                     const birthdayPassed = hasBirthdayPassed(normalizeDate(friend.birthday), today);
+                    const isAwaiting    = birthdayPassed && !hasReflection && !isCurrentUser;
+                    const showChancellor = isCurrentUser && !hasReflection;
+
+                    const statusText = hasReflection
+                        ? '✦ Reflection on file'
+                        : birthdayPassed
+                            ? (isCurrentUser ? '◇ Your turn to write' : '◇ Awaiting submission')
+                            : `◻ Sealed until ${friend.birthday}`;
 
                     const clickAction = isCurrentUser
                         ? 'window.openWriteModal()'
                         : (hasReflection ? `window.openReadModal('${friend.name.replace(/'/g, "\\'")}', '${friend.birthday}')` : '');
 
-                    const showChancellor = isCurrentUser && !hasReflection;
                     return `
-                        <div class="slot-card ${!birthdayPassed ? 'locked' : ''} ${showChancellor ? 'chancellor' : ''}"
+                        <div class="character-card ${!birthdayPassed ? 'locked' : ''} ${showChancellor ? 'chancellor-card' : ''} ${isAwaiting ? 'awaiting' : ''}"
                              ${clickAction ? `onclick="${clickAction}"` : ''}>
+
                             ${showChancellor ? '<div class="slot-chancellor-band">Chancellor</div>' : ''}
-                            ${isCurrentUser && hasReflection  ? '<div class="slot-badge">Edit</div>'      : ''}
-                            ${imageSrc
-                                ? `<img src="${imageSrc}" alt="${friend.name}">`
-                                : `<div class="slot-placeholder">
-                                       <div class="slot-placeholder-initial">${initial}</div>
-                                   </div>`
-                            }
+                            ${isCurrentUser && hasReflection ? '<div class="slot-badge">Edit</div>' : ''}
+
+                            <div class="card-header">
+                                <div class="card-category">${birthdayPassed ? 'Member File' : 'Forthcoming'}</div>
+                            </div>
+
+                            <div class="card-portrait-wrap">
+                                ${imageSrc ? `<img class="card-portrait" src="${imageSrc}" alt="${friend.name}">` : ''}
+                                <div class="card-portrait-placeholder" ${imageSrc ? 'style="display:none"' : ''}>
+                                    <div class="placeholder-monogram">${initial}</div>
+                                    <div class="placeholder-label">Portrait Pending</div>
+                                </div>
+                                ${isAwaiting ? '<div class="awaiting-overlay"><div class="awaiting-label">Awaiting</div></div>' : ''}
+                            </div>
+
+                            <div class="card-footer">
+                                <div class="card-date">Born ${friend.birthday}</div>
+                                <div class="card-status">${statusText}</div>
+                                ${hasReflection && !isCurrentUser ? '<div class="read-more">— Read Full Entry —</div>' : ''}
+                            </div>
                         </div>
                     `;
                 }).join('');
