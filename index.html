@@ -1342,7 +1342,11 @@
             overflow-x: auto;
             overflow-y: hidden;
             scrollbar-width: none;
+            cursor: grab;
+            user-select: none;
+            -webkit-user-select: none;
         }
+        .board-slots:active { cursor: grabbing; }
         .board-slots::-webkit-scrollbar { display: none; }
 
         .policy-slot {
@@ -1509,6 +1513,28 @@
             border-radius: 2px;
             text-transform: uppercase;
             z-index: 1;
+        }
+
+        .board-slots .slot-card.chancellor {
+            border-color: rgba(240,200,70,0.75);
+            box-shadow: 0 0 0 1.5px rgba(240,200,70,0.45), 0 4px 14px rgba(0,0,0,0.55);
+        }
+
+        .slot-chancellor-band {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(90deg, #5a1212 0%, #8b2020 100%);
+            color: #f0e6cc;
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.3rem;
+            letter-spacing: 3px;
+            padding: 4px 2px;
+            text-transform: uppercase;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.18);
+            z-index: 2;
         }
 
         .board-slots .slot-placeholder {
@@ -2031,7 +2057,7 @@
                             </div>
                         </div>
 
-                        <div class="sh-board-footer">The 25 Club &nbsp;·&nbsp; Private Archive &nbsp;·&nbsp; Est. 2025</div>
+                        <div class="sh-board-footer">The 25 Club &nbsp;·&nbsp; Private Archive &nbsp;·&nbsp; Est. 2026</div>
                     </div>
                 </div>
 
@@ -2341,10 +2367,11 @@
                         ? 'window.openWriteModal()'
                         : (hasReflection ? `window.openReadModal('${friend.name.replace(/'/g, "\\'")}', '${friend.birthday}')` : '');
 
+                    const showChancellor = isCurrentUser && !hasReflection;
                     return `
-                        <div class="slot-card ${!birthdayPassed ? 'locked' : ''}"
+                        <div class="slot-card ${!birthdayPassed ? 'locked' : ''} ${showChancellor ? 'chancellor' : ''}"
                              ${clickAction ? `onclick="${clickAction}"` : ''}>
-                            ${isCurrentUser && !hasReflection ? '<div class="slot-badge">Your Turn</div>' : ''}
+                            ${showChancellor ? '<div class="slot-chancellor-band">Chancellor</div>' : ''}
                             ${isCurrentUser && hasReflection  ? '<div class="slot-badge">Edit</div>'      : ''}
                             ${imageSrc
                                 ? `<img src="${imageSrc}" alt="${friend.name}">`
@@ -2359,6 +2386,46 @@
 
             buildCards(liberalSlots, unlocked);
             buildCards(fascistSlots, sealed);
+            ensureSlotScroll(liberalSlots);
+            ensureSlotScroll(fascistSlots);
+        }
+
+        function ensureSlotScroll(el) {
+            if (el.dataset.scrollInited) {
+                updateSlotMask(el);
+                return;
+            }
+            el.dataset.scrollInited = '1';
+
+            let isDown = false, startX, startScrollLeft;
+            el.addEventListener('pointerdown', e => {
+                if (e.target.closest('[onclick]') && !e.target.closest('.slot-card')) return;
+                isDown = true;
+                startX = e.clientX;
+                startScrollLeft = el.scrollLeft;
+                el.setPointerCapture(e.pointerId);
+            });
+            el.addEventListener('pointermove', e => {
+                if (!isDown) return;
+                const dx = startX - e.clientX;
+                el.scrollLeft = startScrollLeft + dx;
+            });
+            el.addEventListener('pointerup', () => { isDown = false; });
+            el.addEventListener('pointercancel', () => { isDown = false; });
+
+            el.addEventListener('scroll', () => updateSlotMask(el));
+            updateSlotMask(el);
+        }
+
+        function updateSlotMask(el) {
+            const canScroll = el.scrollWidth > el.clientWidth + 2;
+            const atEnd = el.scrollLeft >= el.scrollWidth - el.clientWidth - 2;
+            const show = canScroll && !atEnd;
+            const mask = show
+                ? 'linear-gradient(to right, black 68%, transparent 100%)'
+                : 'none';
+            el.style.maskImage = mask;
+            el.style.webkitMaskImage = mask;
         }
 
                 function openWriteModal() {
