@@ -38,6 +38,12 @@
             min-height: 100vh;
         }
 
+        body.app-mode {
+            background: #4E4946 !important;
+            background-image: none !important;
+        }
+        body.app-mode::before { display: none; }
+
         body::before {
             content: '';
             position: fixed;
@@ -1146,13 +1152,10 @@
 
         /* ── Board container ── */
         #mainApp .app-newspaper {
-            background: #090b0e;
-            border: 3px solid #2a3a50;
+            background: #302F2F;
+            border: none;
             padding: 0;
-            box-shadow:
-                0 0 0 1px #1a2a3c,
-                8px 8px 0 rgba(0,0,0,0.55),
-                0 28px 70px rgba(0,0,0,0.65);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.45);
         }
 
         /* Suppress newspaper paper-line texture in app */
@@ -1185,6 +1188,8 @@
         #mainApp .rule-stack { display: none; }
 
         /* ── Section / nav bar ── */
+        #navTabs:empty { display: none; }
+
         #mainApp .app-section-bar {
             background: linear-gradient(90deg, #14223a 0%, #181510 50%, #28120a 100%);
             border-top: 1px solid rgba(49,69,102,0.9);
@@ -1232,8 +1237,7 @@
 
         /* ── Board panel (behind the cards) ── */
         .sh-board-panel {
-            background:
-                radial-gradient(ellipse at 50% -10%, #181614 0%, #0f0d0b 55%, #080706 100%);
+            background: #302F2F;
             padding: 30px 30px 26px;
             position: relative;
         }
@@ -1259,13 +1263,31 @@
 
         /* ── SH-style archive title ── */
         .sh-title-row {
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
             align-items: center;
-            justify-content: center;
-            gap: 18px;
             margin-bottom: 10px;
             position: relative;
             z-index: 1;
+        }
+
+        .app-exit-prominent {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.62rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(240,230,204,0.6);
+            background: transparent;
+            border: 1px solid rgba(240,230,204,0.22);
+            padding: 8px 18px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            justify-self: start;
+        }
+        .app-exit-prominent:hover {
+            color: #f0e6cc;
+            border-color: rgba(240,230,204,0.55);
+            background: rgba(240,230,204,0.08);
         }
 
         .sh-title-arrows {
@@ -2017,35 +2039,19 @@
 
         <!-- ═══════════════════ MAIN APP ═══════════════════ -->
         <div id="mainApp" class="hidden">
-            <div class="top-badge">
-                <div class="seal-icon">25</div>
-                <div class="badge-text">The 25 Club &middot; Private Circular</div>
-            </div>
 
             <div class="app-newspaper">
 
-                <!-- App masthead -->
-                <div class="app-masthead-row">
-                    <span class="app-masthead-side">The 25 Club</span>
-                    <h1 class="app-masthead-title">THE 25 CLUB GAZETTE</h1>
-                    <span class="app-masthead-side right">Private Archive</span>
-                </div>
-
-                <div class="rule-stack">
-                    <div class="r-thick"></div>
-                    <div class="r-thin"></div>
-                </div>
-
-                <!-- Nav / section bar — populated by JS -->
+                <!-- Nav / section bar — populated by JS (setup mode only) -->
                 <div class="app-section-bar" id="navTabs"></div>
 
                 <!-- Combined archive + board view -->
                 <div id="timelineTab" class="tab-content active">
                     <div class="sh-board-panel">
                         <div class="sh-title-row">
-                            <div class="sh-title-arrows">»»»</div>
+                            <button id="appExitBtn" class="app-exit-prominent">← Exit</button>
                             <div class="sh-title-text">The Archive</div>
-                            <div class="sh-title-arrows">«««</div>
+                            <div></div>
                         </div>
                         <div class="sh-rule"></div>
 
@@ -2292,6 +2298,7 @@
         function showApp() {
             document.getElementById('landing').classList.add('hidden');
             document.getElementById('mainApp').classList.remove('hidden');
+            document.body.classList.add('app-mode');
 
             const navTabs = document.getElementById('navTabs');
 
@@ -2302,26 +2309,22 @@
                         <button class="nav-tab active" data-tab="setup">Setup</button>
                     </div>
                 `;
+                document.querySelectorAll('.nav-tab').forEach(tab => {
+                    tab.addEventListener('click', function() {
+                        showTab(this.dataset.tab);
+                    });
+                });
             } else {
-                navTabs.innerHTML = `
-                    <div class="app-section-label">The Archive</div>
-                    <button class="app-back-btn" id="appExitBtn">← Exit</button>
-                `;
                 setTimeout(() => {
                     document.getElementById('appExitBtn')?.addEventListener('click', logout);
                 }, 0);
             }
-
-            document.querySelectorAll('.nav-tab').forEach(tab => {
-                tab.addEventListener('click', function() {
-                    showTab(this.dataset.tab);
-                });
-            });
         }
 
         function logout() {
             state.currentUser = null;
             state.isSetupMode = false;
+            document.body.classList.remove('app-mode');
             document.getElementById('landing').classList.remove('hidden');
             document.getElementById('mainApp').classList.add('hidden');
             document.getElementById('passwordInput').value = '';
