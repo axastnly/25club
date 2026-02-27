@@ -1407,14 +1407,14 @@
             box-shadow: 0 6px 24px rgba(0,0,0,0.55);
         }
 
-        /* Overlay positioned on board SVG: slot area starts at y=58.5 in 257px SVG = 22.76% from top.
-           We extend to the bottom of the board (100%) so cards are full-height. */
+        /* Overlay positioned on board SVG: slot rect x=111.5,y=58.5,w=408,h=141 in 632×257 SVG.
+           left=17.64%, top=22.76%, width=64.56%, height=54.86% */
         .board-slots {
             position: absolute;
             left: 17.64%;
             top: 22.76%;
             width: 64.56%;
-            height: 77.24%;
+            height: 54.86%;
             display: flex;
             gap: 4px;
             overflow-x: auto;
@@ -1579,7 +1579,7 @@
         .board-slots .slot-card img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
             object-position: top center;
             display: block;
         }
