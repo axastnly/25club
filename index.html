@@ -1338,8 +1338,12 @@
             width: 64.56%;
             height: 54.86%;
             display: flex;
-            gap: 0;
+            gap: 4px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scrollbar-width: none;
         }
+        .board-slots::-webkit-scrollbar { display: none; }
 
         .policy-slot {
             flex: 1;
@@ -1459,8 +1463,9 @@
 
         /* ── Slot cards — portrait cards overlaid on board SVGs ── */
         .board-slots .slot-card {
-            flex: 1;
+            flex-shrink: 0;
             height: 100%;
+            aspect-ratio: 5 / 7;
             position: relative;
             overflow: hidden;
             border-radius: 4px;
@@ -1469,7 +1474,6 @@
             background: #72705d;
             border: 1.5px solid rgba(255,255,255,0.22);
             box-shadow: 0 4px 14px rgba(0,0,0,0.55);
-            margin: 0 2px;
         }
 
         .board-slots .slot-card:not(.locked):hover {
