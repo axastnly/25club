@@ -851,7 +851,7 @@
         .modal-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(46,44,42,0.97);
+            background: rgba(14,10,6,0.97);
             display: none;
             align-items: center;
             justify-content: center;
@@ -861,54 +861,90 @@
 
         .modal-overlay.active { display: flex; }
 
-        .read-modal-content {
-            background: #f0e8d4;
-            border: 2px solid #1a1a1a;
-            max-width: 660px;
+        .read-modal-content,
+        .write-modal-content {
+            /* aged parchment: fold creases + writing lines + warm base */
+            background-image:
+                linear-gradient(
+                    transparent 32%,
+                    rgba(150,112,48,0.08) 32%, rgba(150,112,48,0.08) calc(32% + 1px),
+                    transparent calc(32% + 1px),
+                    transparent 66%,
+                    rgba(150,112,48,0.05) 66%, rgba(150,112,48,0.05) calc(66% + 1px),
+                    transparent calc(66% + 1px)
+                ),
+                repeating-linear-gradient(
+                    transparent 0px, transparent 27px,
+                    rgba(130,100,48,0.06) 27px, rgba(130,100,48,0.06) 28px
+                ),
+                linear-gradient(162deg, #fbf1d9 0%, #f4e4bf 22%, #eddab2 50%, #f3e6c8 75%, #f9eedb 100%);
+            border: 1px solid rgba(115,85,35,0.3);
+            border-right-width: 2px;
+            border-bottom-width: 2px;
             width: 100%;
             max-height: 88vh;
             overflow-y: auto;
-            padding: 42px 48px;
-            box-shadow: 5px 5px 0 #9a8a6a, 0 30px 80px rgba(0,0,0,0.6);
             position: relative;
+            transform: rotate(-0.35deg);
+            box-shadow:
+                inset 0 1px 0 rgba(255,252,235,0.75),
+                inset -1px 0 0 rgba(130,95,35,0.07),
+                0 0 0 3px rgba(175,140,72,0.12),
+                6px 6px 0 #cbb47c,
+                11px 11px 0 rgba(120,92,35,0.18),
+                0 35px 85px rgba(0,0,0,0.68);
+        }
+
+        .read-modal-content {
+            max-width: 660px;
+            padding: 52px 52px 48px;
         }
 
         .write-modal-content {
-            background: #f0e8d4;
-            border: 2px solid #1a1a1a;
             max-width: 700px;
-            width: 100%;
-            max-height: 88vh;
-            overflow-y: auto;
-            padding: 36px 42px;
-            box-shadow: 5px 5px 0 #9a8a6a, 0 30px 80px rgba(0,0,0,0.65);
-            position: relative;
+            padding: 44px 48px 40px;
         }
 
         .modal-close {
             position: absolute;
             top: 14px;
-            right: 14px;
+            right: 16px;
             background: none;
-            border: 1px solid currentColor;
-            width: 30px;
-            height: 30px;
-            font-size: 1.1rem;
+            border: none;
+            width: 28px;
+            height: 28px;
+            font-size: 1.25rem;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
             color: inherit;
             cursor: pointer;
-            opacity: 0.45;
+            opacity: 0.28;
             transition: opacity 0.2s, transform 0.2s;
             line-height: 1;
         }
 
-        .modal-close:hover { opacity: 1; transform: rotate(90deg); }
+        .modal-close:hover { opacity: 0.75; transform: rotate(90deg); }
 
-        .read-modal-content .modal-close { color: var(--ink); opacity: 0.4; }
+        .read-modal-content .modal-close { color: var(--ink); opacity: 0.3; }
 
         .read-modal-header {
             text-align: center;
             margin-bottom: 24px;
             padding-bottom: 0;
+        }
+
+        /* wax seal ornament above each modal header */
+        .read-modal-header::before,
+        .write-modal-header::before {
+            content: '';
+            display: block;
+            width: 38px;
+            height: 38px;
+            margin: 0 auto 18px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 38% 33%, #b03030 0%, #721818 58%, #3f0d0d 100%);
+            border: 1.5px solid rgba(50,12,12,0.55);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,150,130,0.18);
         }
 
         .read-modal-section-label {
@@ -1055,7 +1091,7 @@
             line-height: 1.82;
             border: 1px solid rgba(0,0,0,0.2);
             border-top: 2px solid var(--ink);
-            background: #faf6ed;
+            background: rgba(252,245,230,0.65);
             color: var(--ink);
             resize: vertical;
         }
