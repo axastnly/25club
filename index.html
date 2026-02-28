@@ -2586,7 +2586,14 @@
                 }).join('');
             }
 
-            buildCards(liberalSlots, unlocked);
+            // Current user's card always first in the liberal section
+            const liberalOrdered = [...unlocked].sort((a, b) => {
+                const aIsMe = state.currentUser && state.currentUser.name === a.name;
+                const bIsMe = state.currentUser && state.currentUser.name === b.name;
+                return aIsMe ? -1 : bIsMe ? 1 : 0;
+            });
+
+            buildCards(liberalSlots, liberalOrdered);
             buildCards(fascistSlots, sealed);
             ensureSlotScroll(liberalSlots);
             ensureSlotScroll(fascistSlots);
