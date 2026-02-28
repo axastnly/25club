@@ -2141,6 +2141,13 @@
             .page-wrapper { padding: 0 6px; }
             .newspaper { padding: 16px 14px 24px; }
 
+            /* Article headline — "Unprecedented" in Playfair at 3rem breaks layout */
+            .main-headline { font-size: 1.6rem; letter-spacing: 0; }
+            .sub-headline { font-size: 0.92rem; }
+
+            /* Footer — prevent 3 flex items overflowing on narrow screens */
+            .newspaper-footer { flex-direction: column; align-items: center; gap: 3px; }
+
             /* Masthead title — safe size for all phones */
             .masthead-title {
                 font-size: 2.2rem;
