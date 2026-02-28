@@ -1956,16 +1956,12 @@
             inset: 0;
             z-index: 9999;
             display: flex;
-            pointer-events: all;
-            opacity: 0;
+            pointer-events: none;
             visibility: hidden;
         }
         #loadingScreen.active {
-            opacity: 1;
             visibility: visible;
-        }
-        #loadingScreen.done {
-            pointer-events: none;
+            pointer-events: all;
         }
 
         .door {
@@ -1977,10 +1973,25 @@
             display: flex;
             align-items: center;
             overflow: hidden;
-            transition: transform 0.85s cubic-bezier(0.77, 0, 0.18, 1);
+            transition: transform 0.82s cubic-bezier(0.77, 0, 0.18, 1);
         }
-        .door-left  { left: 0;   justify-content: flex-end; border-right: 1px solid rgba(255,255,255,0.06); }
-        .door-right { right: 0;  justify-content: flex-start; border-left: 1px solid rgba(255,255,255,0.06); }
+        /* Doors start offscreen — slide IN when .closed is added */
+        .door-left  {
+            left: 0;
+            justify-content: flex-end;
+            border-right: 1px solid rgba(255,255,255,0.06);
+            transform: translateX(-100%);
+        }
+        .door-right {
+            right: 0;
+            justify-content: flex-start;
+            border-left: 1px solid rgba(255,255,255,0.06);
+            transform: translateX(100%);
+        }
+
+        /* Doors closed — covering the screen */
+        #loadingScreen.closed .door-left,
+        #loadingScreen.closed .door-right { transform: none; }
 
         /* Shared decorative inner panel */
         .door::before {
@@ -2005,10 +2016,7 @@
             justify-content: center;
             gap: 10px;
             padding: 0 32px;
-            opacity: 1;
-            transition: opacity 0.3s ease;
         }
-        #loadingScreen.done .door-icons { opacity: 0; }
 
         .door-icon {
             width: 48px;
@@ -2017,9 +2025,6 @@
             filter: invert(1) sepia(1) saturate(0.5) brightness(0.75);
             opacity: 0.55;
         }
-
-        #loadingScreen.done .door-left  { transform: translateX(-100%); }
-        #loadingScreen.done .door-right { transform: translateX(100%); }
 
 
 
@@ -2834,31 +2839,37 @@
             setInterval(checkBirthdays, 60 * 60 * 1000);
         });
     
-        // ── Loading screen door-open animation (called by showApp) ───────────
+        // ── Loading screen: close in → hold → open out ───────────────────────
         function playDoorAnimation(callback) {
             const screen = document.getElementById('loadingScreen');
             if (!screen) { if (callback) callback(); return; }
 
-            // Reset doors in case animation was played before
-            screen.querySelector('.door-left').style.transform  = '';
-            screen.querySelector('.door-right').style.transform = '';
-            screen.classList.remove('done');
+            // Reset to offscreen start state
+            screen.classList.remove('closed');
             screen.classList.add('active');
 
-            // Let the browser paint the open state before animating shut→open
+            // Paint offscreen frame first, then slide doors closed (in)
             requestAnimationFrame(function() {
                 requestAnimationFrame(function() {
-                    // Brief hold so user sees the doors, then open them
-                    setTimeout(function() {
-                        screen.classList.add('done');
-                        screen.addEventListener('transitionend', function handler(e) {
-                            if (e.propertyName === 'transform') {
-                                screen.classList.remove('active', 'done');
-                                screen.removeEventListener('transitionend', handler);
+                    screen.classList.add('closed');
+
+                    // Wait for close-in transition to finish, then hold, then open out
+                    screen.addEventListener('transitionend', function closeHandler(e) {
+                        if (e.propertyName !== 'transform') return;
+                        screen.removeEventListener('transitionend', closeHandler);
+
+                        setTimeout(function() {
+                            // Open out — remove .closed so doors return to offscreen position
+                            screen.classList.remove('closed');
+
+                            screen.addEventListener('transitionend', function openHandler(e) {
+                                if (e.propertyName !== 'transform') return;
+                                screen.removeEventListener('transitionend', openHandler);
+                                screen.classList.remove('active');
                                 if (callback) callback();
-                            }
-                        });
-                    }, 650);
+                            });
+                        }, 550);
+                    });
                 });
             });
         }
