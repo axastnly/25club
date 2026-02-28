@@ -2484,32 +2484,33 @@
         });
 
         function showApp() {
-            playDoorAnimation(function() {
-                /* inner content revealed after doors open */
-            });
-            document.getElementById('landing').classList.add('hidden');
-            document.getElementById('mainApp').classList.remove('hidden');
-            document.body.classList.add('app-mode');
+            // Doors close over landing page, content swaps while shut, doors open on archive
+            playDoorAnimation(
+                function onClosed() {
+                    // Hidden behind doors — swap pages now
+                    document.getElementById('landing').classList.add('hidden');
+                    document.getElementById('mainApp').classList.remove('hidden');
+                    document.body.classList.add('app-mode');
 
-            const navTabs = document.getElementById('navTabs');
-
-            if (state.isSetupMode) {
-                navTabs.innerHTML = `
-                    <div class="app-section-label">Registry Admin</div>
-                    <div class="app-section-tabs">
-                        <button class="nav-tab active" data-tab="setup">Setup</button>
-                    </div>
-                `;
-                document.querySelectorAll('.nav-tab').forEach(tab => {
-                    tab.addEventListener('click', function() {
-                        showTab(this.dataset.tab);
-                    });
-                });
-            } else {
-                setTimeout(() => {
-                    document.getElementById('appExitBtn')?.addEventListener('click', logout);
-                }, 0);
-            }
+                    const navTabs = document.getElementById('navTabs');
+                    if (state.isSetupMode) {
+                        navTabs.innerHTML = `
+                            <div class="app-section-label">Registry Admin</div>
+                            <div class="app-section-tabs">
+                                <button class="nav-tab active" data-tab="setup">Setup</button>
+                            </div>
+                        `;
+                        document.querySelectorAll('.nav-tab').forEach(tab => {
+                            tab.addEventListener('click', function() {
+                                showTab(this.dataset.tab);
+                            });
+                        });
+                    } else {
+                        document.getElementById('appExitBtn')?.addEventListener('click', logout);
+                    }
+                },
+                null /* onOpened — nothing extra needed */
+            );
         }
 
         function logout() {
@@ -2840,9 +2841,11 @@
         });
     
         // ── Loading screen: close in → hold → open out ───────────────────────
-        function playDoorAnimation(callback) {
+        // onClosed: called when doors are fully shut (swap content here — hidden from user)
+        // onOpened: called when doors have fully opened (page reveal complete)
+        function playDoorAnimation(onClosed, onOpened) {
             const screen = document.getElementById('loadingScreen');
-            if (!screen) { if (callback) callback(); return; }
+            if (!screen) { if (onClosed) onClosed(); if (onOpened) onOpened(); return; }
 
             // Reset to offscreen start state
             screen.classList.remove('closed');
@@ -2853,22 +2856,25 @@
                 requestAnimationFrame(function() {
                     screen.classList.add('closed');
 
-                    // Wait for close-in transition to finish, then hold, then open out
+                    // Wait for close-in transition to finish
                     screen.addEventListener('transitionend', function closeHandler(e) {
                         if (e.propertyName !== 'transform') return;
                         screen.removeEventListener('transitionend', closeHandler);
 
+                        // Swap content while doors are shut — user sees nothing
+                        if (onClosed) onClosed();
+
+                        // Brief hold, then open out
                         setTimeout(function() {
-                            // Open out — remove .closed so doors return to offscreen position
                             screen.classList.remove('closed');
 
                             screen.addEventListener('transitionend', function openHandler(e) {
                                 if (e.propertyName !== 'transform') return;
                                 screen.removeEventListener('transitionend', openHandler);
                                 screen.classList.remove('active');
-                                if (callback) callback();
+                                if (onOpened) onOpened();
                             });
-                        }, 550);
+                        }, 400);
                     });
                 });
             });
