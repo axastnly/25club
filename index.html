@@ -1446,6 +1446,9 @@
             box-shadow: 0 6px 24px rgba(0,0,0,0.55);
         }
 
+        /* Mobile board variants — hidden by default, swapped in via media query */
+        .board-bg-mobile { display: none; }
+
         /* Overlay positioned on board SVG: slot rect x=111.5,y=58.5,w=408,h=141 in 632×257 SVG.
            left=17.64%, top=22.76%, width=64.56%, height=54.86% */
         .board-slots {
@@ -2077,6 +2080,27 @@
             /* Board panel */
             .sh-board-panel { padding: 14px 10px 16px; }
 
+            /* Swap desktop boards for mobile boards (747×428 SVG — taller aspect ratio,
+               shows ~2-3 cards naturally at phone width) */
+            .board-bg-desktop { display: none; }
+            .board-bg-mobile  { display: block; }
+
+            /* Liberal mobile: slot rect x=114.5,y=58.5,w=518,h=314 in 747×428 */
+            .board-slots {
+                left:   15.33%;
+                top:    13.67%;
+                width:  69.35%;
+                height: 73.36%;
+            }
+
+            /* Fascist mobile: slot rect x=58.5,y=58.5,w=631,h=314 in 747×428 */
+            #fascistSlots {
+                left:   7.83%;
+                top:    13.67%;
+                width:  84.47%;
+                height: 73.36%;
+            }
+
             /* Archive title row */
             .sh-title-row { grid-template-columns: auto 1fr auto; gap: 6px; }
             .sh-title-text {
@@ -2462,14 +2486,16 @@
 
                         <div class="game-board-section">
                             <div class="board-wrapper">
-                                <img src="Liberal%20board.svg" class="board-bg" alt="Liberal Board">
+                                <img src="Liberal%20board.svg" class="board-bg board-bg-desktop" alt="Liberal Board">
+                                <img src="Liberal%20board%20-%20mobile.svg" class="board-bg board-bg-mobile" alt="Liberal Board">
                                 <div class="board-slots" id="liberalSlots"></div>
                             </div>
                         </div>
 
                         <div class="game-board-section">
                             <div class="board-wrapper">
-                                <img src="Fascist%20board.svg" class="board-bg" alt="Fascist Board">
+                                <img src="Fascist%20board.svg" class="board-bg board-bg-desktop" alt="Fascist Board">
+                                <img src="Fascist%20board%20-%20mobile.svg" class="board-bg board-bg-mobile" alt="Fascist Board">
                                 <div class="board-slots" id="fascistSlots"></div>
                             </div>
                         </div>
