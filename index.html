@@ -1957,6 +1957,12 @@
             z-index: 9999;
             display: flex;
             pointer-events: all;
+            opacity: 0;
+            visibility: hidden;
+        }
+        #loadingScreen.active {
+            opacity: 1;
+            visibility: visible;
         }
         #loadingScreen.done {
             pointer-events: none;
@@ -2015,43 +2021,7 @@
         #loadingScreen.done .door-left  { transform: translateX(-100%); }
         #loadingScreen.done .door-right { transform: translateX(100%); }
 
-        /* Centre logo / title between doors — positioned absolutely in the middle */
-        .door-center {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 10;
-            text-align: center;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-        #loadingScreen.done .door-center { opacity: 0; }
 
-        .door-center-title {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(1.2rem, 4vw, 2.2rem);
-            font-weight: 700;
-            color: #f0e6cc;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            white-space: nowrap;
-            text-shadow: 0 2px 12px rgba(0,0,0,0.8);
-        }
-        .door-center-sub {
-            font-family: 'Oswald', sans-serif;
-            font-size: 0.55rem;
-            letter-spacing: 8px;
-            color: rgba(200,168,60,0.7);
-            text-transform: uppercase;
-            margin-top: 6px;
-        }
-        .door-center-rule {
-            width: 60px;
-            height: 1px;
-            background: rgba(200,168,60,0.4);
-            margin: 8px auto;
-        }
 
     </style>
 </head>
@@ -2072,12 +2042,7 @@
                 <img class="door-icon" src="liberal.svg"  alt="">
             </div>
         </div>
-        <div class="door-center">
-            <div class="door-center-rule"></div>
-            <div class="door-center-title">The 25 Club</div>
-            <div class="door-center-sub">Gazette &middot; Private Circular</div>
-            <div class="door-center-rule"></div>
-        </div>
+
     </div>
 
     <div class="page-wrapper">
@@ -2514,6 +2479,9 @@
         });
 
         function showApp() {
+            playDoorAnimation(function() {
+                /* inner content revealed after doors open */
+            });
             document.getElementById('landing').classList.add('hidden');
             document.getElementById('mainApp').classList.remove('hidden');
             document.body.classList.add('app-mode');
@@ -2866,22 +2834,34 @@
             setInterval(checkBirthdays, 60 * 60 * 1000);
         });
     
-        // ── Loading screen door-open animation ───────────────────────────────
-        (function() {
+        // ── Loading screen door-open animation (called by showApp) ───────────
+        function playDoorAnimation(callback) {
             const screen = document.getElementById('loadingScreen');
-            if (!screen) return;
-            // Slight delay so browser paints the doors before animating
-            setTimeout(function() {
-                screen.classList.add('done');
-                // Remove from DOM after transition finishes
-                screen.addEventListener('transitionend', function handler(e) {
-                    if (e.target === screen.querySelector('.door-left') || e.propertyName === 'transform') {
-                        screen.remove();
-                        screen.removeEventListener('transitionend', handler);
-                    }
+            if (!screen) { if (callback) callback(); return; }
+
+            // Reset doors in case animation was played before
+            screen.querySelector('.door-left').style.transform  = '';
+            screen.querySelector('.door-right').style.transform = '';
+            screen.classList.remove('done');
+            screen.classList.add('active');
+
+            // Let the browser paint the open state before animating shut→open
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    // Brief hold so user sees the doors, then open them
+                    setTimeout(function() {
+                        screen.classList.add('done');
+                        screen.addEventListener('transitionend', function handler(e) {
+                            if (e.propertyName === 'transform') {
+                                screen.classList.remove('active', 'done');
+                                screen.removeEventListener('transitionend', handler);
+                                if (callback) callback();
+                            }
+                        });
+                    }, 650);
                 });
-            }, 900);
-        })();
+            });
+        }
 
 </script>
 </body>
