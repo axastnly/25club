@@ -2141,11 +2141,18 @@
             .page-wrapper { padding: 0 6px; }
             .newspaper { padding: 16px 14px 24px; }
 
-            /* Article headline — "Unprecedented" in Playfair at 3rem breaks layout */
+            /* Article headline */
             .main-headline { font-size: 1.6rem; letter-spacing: 0; }
             .sub-headline { font-size: 0.92rem; }
 
-            /* Footer — prevent 3 flex items overflowing on narrow screens */
+            /* Grid items default to min-width:auto, preventing them from shrinking
+               below their content size — reset to 0 so columns honour available space */
+            .main-content > *, .article-layout > * { min-width: 0; }
+
+            /* Allow any remaining long word to break rather than overflow */
+            .newspaper { overflow-wrap: break-word; }
+
+            /* Footer — stack instead of side-by-side row */
             .newspaper-footer { flex-direction: column; align-items: center; gap: 3px; }
 
             /* Masthead title — safe size for all phones */
