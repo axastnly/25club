@@ -2057,15 +2057,10 @@
 
         /* ── Phone optimisations (≤ 600px) ── */
         @media (max-width: 600px) {
-            /* Kill side padding on the outer wrapper */
-            .page-wrapper { padding: 0; }
-
-            /* Flatten the newspaper chrome */
-            .newspaper, .app-newspaper {
-                padding: 12px 12px 20px;
+            /* Flatten the app newspaper chrome */
+            .app-newspaper {
+                padding: 0;
                 box-shadow: none;
-                border-left: none;
-                border-right: none;
             }
 
             /* Masthead */
@@ -2142,11 +2137,25 @@
             /* Lock Registry button */
             #saveSetupBtn { letter-spacing: 2px; }
 
-            /* Landing masthead — prevent overflow */
-            .masthead-title { font-size: 3rem; letter-spacing: -2px; }
-            .newspaper { padding: 16px 12px 22px; }
-            .masthead-topbar { font-size: 0.48rem; letter-spacing: 1px; }
-            .newspaper-meta { font-size: 0.52rem; }
+            /* Landing page newspaper */
+            .page-wrapper { padding: 0 6px; }
+            .newspaper { padding: 16px 14px 24px; }
+
+            /* Masthead title — safe size for all phones */
+            .masthead-title {
+                font-size: 2.2rem;
+                letter-spacing: -1px;
+            }
+
+            /* Topbar / meta — hide outer columns, keep centre */
+            .masthead-topbar .t-right,
+            .masthead-topbar span:first-child { display: none; }
+            .masthead-topbar { grid-template-columns: 1fr; text-align: center; }
+
+            .newspaper-meta .m-right,
+            .newspaper-meta span:first-child { display: none; }
+            .newspaper-meta { grid-template-columns: 1fr; text-align: center; }
+
             .main-content { grid-template-columns: 1fr; }
         }
 
