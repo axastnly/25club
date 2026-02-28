@@ -24,7 +24,10 @@
             --rule-light: rgba(0,0,0,0.15);
         }
 
+        html { overflow-x: hidden; }
+
         body {
+            overflow-x: hidden;
             font-family: 'Libre Franklin', sans-serif;
             background: #cfc3a8;
             background-image:
@@ -2077,10 +2080,26 @@
             .app-section-tabs { flex-shrink: 0; }
 
             /* Board panel */
-            .sh-board-panel { padding: 14px 12px 16px; }
+            .sh-board-panel { padding: 14px 10px 16px; }
+
+            /* Archive title row */
+            .sh-title-row { grid-template-columns: auto 1fr auto; gap: 6px; }
+            .sh-title-text {
+                font-size: 1.5rem;
+                letter-spacing: 4px;
+                text-align: center;
+            }
+            .sh-title-arrows { font-size: 1rem; }
+            .app-exit-prominent { padding: 6px 10px; font-size: 0.55rem; letter-spacing: 2px; }
+
+            /* Character card grid — single column */
+            #mainApp .timeline {
+                grid-template-columns: repeat(auto-fill, minmax(min(160px, 100%), 1fr));
+                gap: 16px;
+            }
 
             /* Setup form */
-            .setup-form { padding: 20px 14px; }
+            .setup-form { padding: 18px 12px; }
 
             .setup-header {
                 flex-direction: row;
@@ -2122,6 +2141,13 @@
 
             /* Lock Registry button */
             #saveSetupBtn { letter-spacing: 2px; }
+
+            /* Landing masthead — prevent overflow */
+            .masthead-title { font-size: 3rem; letter-spacing: -2px; }
+            .newspaper { padding: 16px 12px 22px; }
+            .masthead-topbar { font-size: 0.48rem; letter-spacing: 1px; }
+            .newspaper-meta { font-size: 0.52rem; }
+            .main-content { grid-template-columns: 1fr; }
         }
 
         /* ── Loading screen — door split animation ── */
