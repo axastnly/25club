@@ -1609,37 +1609,39 @@
 
         .awaiting-overlay {
             position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            bottom: 0;
+            left: 0;
+            right: 0;
             z-index: 2;
             pointer-events: none;
         }
         .awaiting-label {
+            display: block;
             font-family: 'Oswald', sans-serif;
-            font-size: 0.5rem;
-            letter-spacing: 5px;
+            font-size: 0.55rem;
+            letter-spacing: 4px;
             text-transform: uppercase;
-            color: rgba(90,18,18,0.7);
-            background: rgba(240,230,204,0.88);
-            padding: 5px 12px;
-            border: 1px solid rgba(90,18,18,0.18);
+            color: rgba(240,230,204,0.75);
+            background: rgba(48,18,18,0.82);
+            padding: 7px 4px;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.12);
         }
 
         .board-slots .slot-badge {
             position: absolute;
-            top: 3px;
-            right: 3px;
-            background: #8b1a1a;
+            top: 4px;
+            right: 4px;
+            background: rgba(139,26,26,0.92);
             color: #f0e6cc;
             font-family: 'Oswald', sans-serif;
-            font-size: 0.32rem;
-            letter-spacing: 1.5px;
-            padding: 2px 4px;
+            font-size: 0.48rem;
+            letter-spacing: 2px;
+            padding: 4px 7px;
             border-radius: 2px;
             text-transform: uppercase;
             z-index: 3;
+            border: 1px solid rgba(255,255,255,0.22);
         }
 
         .board-slots .slot-card.chancellor {
@@ -1947,9 +1949,137 @@
             .app-masthead-side { display: none; }
             .app-masthead-title { font-size: 2.4rem; }
         }
+
+        /* ── Loading screen — door split animation ── */
+        #loadingScreen {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            pointer-events: all;
+        }
+        #loadingScreen.done {
+            pointer-events: none;
+        }
+
+        .door {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 50%;
+            background: #1a1209;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            transition: transform 0.85s cubic-bezier(0.77, 0, 0.18, 1);
+        }
+        .door-left  { left: 0;   justify-content: flex-end; border-right: 1px solid rgba(255,255,255,0.06); }
+        .door-right { right: 0;  justify-content: flex-start; border-left: 1px solid rgba(255,255,255,0.06); }
+
+        /* Shared decorative inner panel */
+        .door::before {
+            content: '';
+            position: absolute;
+            inset: 12px;
+            border: 1px solid rgba(200,168,60,0.18);
+            pointer-events: none;
+        }
+        .door::after {
+            content: '';
+            position: absolute;
+            inset: 20px;
+            border: 1px solid rgba(200,168,60,0.08);
+            pointer-events: none;
+        }
+
+        .door-icons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 0 32px;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+        #loadingScreen.done .door-icons { opacity: 0; }
+
+        .door-icon {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+            filter: invert(1) sepia(1) saturate(0.5) brightness(0.75);
+            opacity: 0.55;
+        }
+
+        #loadingScreen.done .door-left  { transform: translateX(-100%); }
+        #loadingScreen.done .door-right { transform: translateX(100%); }
+
+        /* Centre logo / title between doors — positioned absolutely in the middle */
+        .door-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            text-align: center;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        #loadingScreen.done .door-center { opacity: 0; }
+
+        .door-center-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.2rem, 4vw, 2.2rem);
+            font-weight: 700;
+            color: #f0e6cc;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            white-space: nowrap;
+            text-shadow: 0 2px 12px rgba(0,0,0,0.8);
+        }
+        .door-center-sub {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.55rem;
+            letter-spacing: 8px;
+            color: rgba(200,168,60,0.7);
+            text-transform: uppercase;
+            margin-top: 6px;
+        }
+        .door-center-rule {
+            width: 60px;
+            height: 1px;
+            background: rgba(200,168,60,0.4);
+            margin: 8px auto;
+        }
+
     </style>
 </head>
 <body>
+    <!-- ═══════════════════ LOADING SCREEN ═══════════════════ -->
+    <div id="loadingScreen">
+        <div class="door door-left">
+            <div class="door-icons">
+                <img class="door-icon" src="liberal.svg"  alt="">
+                <img class="door-icon" src="hitler.svg"   alt="">
+                <img class="door-icon" src="fascist.svg"  alt="">
+            </div>
+        </div>
+        <div class="door door-right">
+            <div class="door-icons">
+                <img class="door-icon" src="fascist.svg"  alt="">
+                <img class="door-icon" src="hitler.svg"   alt="">
+                <img class="door-icon" src="liberal.svg"  alt="">
+            </div>
+        </div>
+        <div class="door-center">
+            <div class="door-center-rule"></div>
+            <div class="door-center-title">The 25 Club</div>
+            <div class="door-center-sub">Gazette &middot; Private Circular</div>
+            <div class="door-center-rule"></div>
+        </div>
+    </div>
+
     <div class="page-wrapper">
 
         <!-- ═══════════════════ LANDING ═══════════════════ -->
@@ -2460,16 +2590,15 @@
                     const hasReflection = !!state.reflections[friend.name];
                     const birthdayPassed = hasBirthdayPassed(normalizeDate(friend.birthday), today);
                     const isAwaiting    = birthdayPassed && !hasReflection && !isCurrentUser;
-                    const showChancellor = isCurrentUser && !hasReflection;
 
                     const clickAction = isCurrentUser
                         ? 'window.openWriteModal()'
                         : (hasReflection ? `window.openReadModal('${friend.name.replace(/'/g, "\\'")}', '${friend.birthday}')` : '');
 
                     return `
-                        <div class="slot-card ${!birthdayPassed ? 'locked' : ''} ${showChancellor ? 'chancellor' : ''} ${isAwaiting ? 'awaiting' : ''}"
+                        <div class="slot-card ${!birthdayPassed ? 'locked' : ''} ${isCurrentUser ? 'chancellor' : ''} ${isAwaiting ? 'awaiting' : ''}"
                              ${clickAction ? `onclick="${clickAction}"` : ''}>
-                            ${showChancellor ? '<div class="slot-chancellor-band">Chancellor</div>' : ''}
+                            ${isCurrentUser ? '<div class="slot-chancellor-band">Chancellor</div>' : ''}
                             ${isCurrentUser && hasReflection ? '<div class="slot-badge">Edit</div>' : ''}
                             ${imageSrc
                                 ? `<img src="${imageSrc}" alt="${friend.name}">`
@@ -2736,6 +2865,24 @@
             checkBirthdays();
             setInterval(checkBirthdays, 60 * 60 * 1000);
         });
-    </script>
+    
+        // ── Loading screen door-open animation ───────────────────────────────
+        (function() {
+            const screen = document.getElementById('loadingScreen');
+            if (!screen) return;
+            // Slight delay so browser paints the doors before animating
+            setTimeout(function() {
+                screen.classList.add('done');
+                // Remove from DOM after transition finishes
+                screen.addEventListener('transitionend', function handler(e) {
+                    if (e.target === screen.querySelector('.door-left') || e.propertyName === 'transform') {
+                        screen.remove();
+                        screen.removeEventListener('transitionend', handler);
+                    }
+                });
+            }, 900);
+        })();
+
+</script>
 </body>
 </html>
