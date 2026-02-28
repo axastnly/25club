@@ -2052,6 +2052,78 @@
             .app-masthead-title { font-size: 2.4rem; }
         }
 
+        /* ── Phone optimisations (≤ 600px) ── */
+        @media (max-width: 600px) {
+            /* Kill side padding on the outer wrapper */
+            .page-wrapper { padding: 0; }
+
+            /* Flatten the newspaper chrome */
+            .newspaper, .app-newspaper {
+                padding: 12px 12px 20px;
+                box-shadow: none;
+                border-left: none;
+                border-right: none;
+            }
+
+            /* Masthead */
+            #mainApp .app-masthead-row { padding: 10px 14px; }
+            #mainApp .app-masthead-title {
+                font-size: 1.8rem;
+                letter-spacing: 5px;
+            }
+
+            /* Nav tabs — scroll horizontally if needed */
+            .app-section-bar { overflow-x: auto; }
+            .app-section-tabs { flex-shrink: 0; }
+
+            /* Board panel */
+            .sh-board-panel { padding: 14px 12px 16px; }
+
+            /* Setup form */
+            .setup-form { padding: 20px 14px; }
+
+            .setup-header {
+                flex-direction: row;
+                align-items: center;
+                gap: 10px;
+            }
+
+            #mainApp .setup-header h2 {
+                font-size: 1.4rem;
+                letter-spacing: 3px;
+            }
+
+            /* Exit button — shrink to fit */
+            #logoutBtn {
+                padding: 7px 12px !important;
+                font-size: 0.62rem !important;
+                letter-spacing: 1.5px !important;
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+
+            /* Member rows — stack all fields */
+            .friend-row {
+                grid-template-columns: 1fr;
+                gap: 7px;
+                padding-bottom: 12px;
+                border-bottom: 1px solid rgba(240,230,204,0.07);
+                margin-bottom: 14px;
+            }
+
+            .btn-remove {
+                width: 100%;
+                padding: 10px;
+                font-size: 0.7rem;
+                letter-spacing: 2px;
+                font-family: 'Libre Franklin', sans-serif;
+                text-transform: uppercase;
+            }
+
+            /* Lock Registry button */
+            #saveSetupBtn { letter-spacing: 2px; }
+        }
+
         /* ── Loading screen — door split animation ── */
         #loadingScreen {
             position: fixed;
