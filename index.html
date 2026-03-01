@@ -6,6 +6,15 @@
     <title>The 25 Club Gazette</title>
     <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Bebas+Neue&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* ── Eskapade Fraktur Black — local font ── */
+        @font-face {
+            font-family: 'Eskapade Fraktur';
+            src: url('EskapadeFraktur-Black.woff') format('woff'),
+                 url('EskapadeFraktur-Black.ttf')  format('truetype');
+            font-weight: 900;
+            font-style: normal;
+            font-display: swap;
+        }
         * {
             margin: 0;
             padding: 0;
@@ -1394,12 +1403,11 @@
         }
 
         .sh-title-text {
-            font-family: 'Oswald', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 700;
+            font-family: 'Eskapade Fraktur', serif;
+            font-size: 2.6rem;
+            font-weight: 900;
             color: #f0e6cc;
-            letter-spacing: 10px;
-            text-transform: uppercase;
+            letter-spacing: 3px;
             text-shadow:
                 2px 2px 0 rgba(0,0,0,0.55),
                 0 0 30px rgba(102,159,189,0.25);
@@ -2101,15 +2109,27 @@
                 height: 73.36%;
             }
 
-            /* Archive title row */
-            .sh-title-row { grid-template-columns: auto 1fr auto; gap: 6px; }
+            /* Archive title row — button pinned left, title truly centred */
+            .sh-title-row {
+                display: flex;
+                position: relative;
+                justify-content: center;
+                align-items: center;
+                gap: 0;
+            }
             .sh-title-text {
-                font-size: 1.5rem;
-                letter-spacing: 4px;
+                font-size: 1.7rem;
+                letter-spacing: 2px;
                 text-align: center;
             }
             .sh-title-arrows { font-size: 1rem; }
-            .app-exit-prominent { padding: 6px 10px; font-size: 0.55rem; letter-spacing: 2px; }
+            .app-exit-prominent {
+                position: absolute;
+                left: 0;
+                padding: 6px 10px;
+                font-size: 0.55rem;
+                letter-spacing: 2px;
+            }
 
             /* Character card grid — single column */
             #mainApp .timeline {
@@ -2479,7 +2499,7 @@
                     <div class="sh-board-panel">
                         <div class="sh-title-row">
                             <button id="appExitBtn" class="app-exit-prominent">← Exit</button>
-                            <div class="sh-title-text">The Archive</div>
+                            <div class="sh-title-text">Secret Hitler</div>
                             <div></div>
                         </div>
                         <div class="sh-rule"></div>
@@ -2755,7 +2775,9 @@
                             });
                         });
                     } else {
-                        document.getElementById('appExitBtn')?.addEventListener('click', logout);
+                        document.getElementById('appExitBtn')?.addEventListener('click', function() {
+                            playDoorAnimation(logout, null);
+                        });
                     }
                 },
                 null /* onOpened — nothing extra needed */
@@ -3090,7 +3112,9 @@
 
         loadData().then(() => {
             document.getElementById('loginBtn').addEventListener('click', checkLogin);
-            document.getElementById('logoutBtn')?.addEventListener('click', logout);
+            document.getElementById('logoutBtn')?.addEventListener('click', function() {
+                playDoorAnimation(logout, null);
+            });
             document.getElementById('addFriendBtn')?.addEventListener('click', addFriend);
             document.getElementById('saveSetupBtn')?.addEventListener('click', saveSetup);
             document.getElementById('closeWriteBtn')?.addEventListener('click', closeWriteModal);
