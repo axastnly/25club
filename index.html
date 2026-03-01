@@ -1061,16 +1061,41 @@
             margin-bottom: 20px;
         }
 
-        .prompts-box h3 {
+        /* Collapsible prompts toggle button */
+        .prompts-toggle {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
             font-size: 0.5rem;
             letter-spacing: 4px;
             text-transform: uppercase;
             font-weight: 700;
             color: var(--ink);
             opacity: 0.45;
-            margin-bottom: 10px;
             font-family: 'Libre Franklin', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            width: 100%;
+            text-align: left;
         }
+        .prompts-toggle:hover { opacity: 0.7; }
+
+        .prompts-toggle-icon {
+            display: inline-block;
+            transition: transform 0.22s ease;
+            font-style: normal;
+        }
+        .prompts-toggle[aria-expanded="true"] .prompts-toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .prompts-list {
+            display: none;
+            margin-top: 10px;
+        }
+        .prompts-list.open { display: block; }
 
         .prompts-box li {
             font-family: 'Playfair Display', serif;
@@ -2499,7 +2524,7 @@
                     <div class="sh-board-panel">
                         <div class="sh-title-row">
                             <button id="appExitBtn" class="app-exit-prominent">← Exit</button>
-                            <div class="sh-title-text">Secret Hitler</div>
+                            <div class="sh-title-text">Secret Archive</div>
                             <div></div>
                         </div>
                         <div class="sh-rule"></div>
@@ -2562,8 +2587,11 @@
                 <div class="write-modal-rule-thin"></div>
 
                 <div class="prompts-box">
-                    <h3>Starting points if you're stuck:</h3>
-                    <ul style="padding-left:16px;">
+                    <button class="prompts-toggle" aria-expanded="false">
+                        Starting points if you're stuck
+                        <span class="prompts-toggle-icon">▾</span>
+                    </button>
+                    <ul class="prompts-list" style="padding-left:16px;">
                         <li>what would you tell yourself at 18?</li>
                         <li>what lesson took way too long to learn?</li>
                         <li>what's the best advice you got — that you actually followed?</li>
@@ -3120,6 +3148,13 @@
             document.getElementById('closeWriteBtn')?.addEventListener('click', closeWriteModal);
             document.getElementById('cancelWriteBtn')?.addEventListener('click', closeWriteModal);
             document.getElementById('saveReflectionBtn')?.addEventListener('click', saveReflection);
+
+            // Collapsible "stuck" prompts in write modal
+            document.querySelector('.prompts-toggle')?.addEventListener('click', function() {
+                const expanded = this.getAttribute('aria-expanded') === 'true';
+                this.setAttribute('aria-expanded', String(!expanded));
+                this.closest('.prompts-box').querySelector('.prompts-list').classList.toggle('open', !expanded);
+            });
             document.getElementById('closeReadBtn')?.addEventListener('click', closeReadModal);
 
             checkBirthdays();
