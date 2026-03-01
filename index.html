@@ -3020,7 +3020,14 @@
 
             await saveData();
 
-            if (isFirstPost) sendNewReflectionEmails();
+            // Send notification on every save, but at most once per person per day
+            // (prevents spam if someone edits multiple times; fixes the bug where
+            // isFirstPost=true in Firestore blocked all future notifications)
+            const notifKey = `reflection-notif-${state.currentUser.name}-${getToday()}`;
+            if (!localStorage.getItem(notifKey)) {
+                sendNewReflectionEmails();
+                localStorage.setItem(notifKey, 'true');
+            }
 
             closeWriteModal();
             renderTimeline();
