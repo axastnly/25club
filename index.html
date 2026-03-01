@@ -3062,7 +3062,7 @@
         }
 
         function sendBirthdayEmail(friend) {
-            emailjs.send(
+            return emailjs.send(
                 EMAILJS_CONFIG.serviceId,
                 EMAILJS_CONFIG.templates.birthday,
                 {
@@ -3073,7 +3073,7 @@
                 }
             ).then(
                 () => console.log(`Birthday email → ${friend.name}`),
-                (error) => console.error('Email failed:', error)
+                (error) => { console.error('Email failed:', error); throw error; }
             );
         }
 
@@ -3146,16 +3146,24 @@
                 });
 
                 container.querySelectorAll('.btn-send-code').forEach(btn => {
-                    btn.addEventListener('click', function() {
+                    btn.addEventListener('click', async function() {
                         const index = parseInt(this.dataset.index);
                         const friend = state.friends[index];
                         if (!friend.email || !friend.name || !friend.birthday) return;
-                        sendBirthdayEmail(friend);
-                        state.birthdaySent[friend.name] = getToday();
-                        saveData();
-                        this.textContent = 'SENT ✓';
+                        this.textContent = '...';
                         this.disabled = true;
-                        this.style.opacity = '0.5';
+                        try {
+                            await sendBirthdayEmail(friend);
+                            state.birthdaySent[friend.name] = getToday();
+                            saveData();
+                            this.textContent = 'SENT ✓';
+                            this.style.opacity = '0.5';
+                        } catch (err) {
+                            this.textContent = 'FAILED';
+                            this.disabled = false;
+                            this.style.opacity = '1';
+                            alert('Email failed: ' + (err?.text || err?.message || JSON.stringify(err)));
+                        }
                     });
                 });
 
