@@ -1209,7 +1209,7 @@
 
         .friend-row {
             display: grid;
-            grid-template-columns: 1.5fr 108px 1.5fr 42px;
+            grid-template-columns: 1.5fr 108px 1.5fr auto 42px;
             gap: 10px;
             margin-bottom: 11px;
         }
@@ -1235,6 +1235,22 @@
         }
 
         .btn-remove:hover { background: var(--border); }
+
+        .btn-send-code {
+            background: var(--sienna);
+            border: none;
+            color: white;
+            font-size: 0.5rem;
+            letter-spacing: 1.5px;
+            font-family: 'Libre Franklin', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 0 8px;
+            white-space: nowrap;
+            transition: background 0.2s;
+        }
+
+        .btn-send-code:hover { background: #6b340f; }
 
         .btn-add {
             width: 100%;
@@ -2027,6 +2043,13 @@
 
         #mainApp .btn-remove:hover { background: rgba(139,26,26,0.9); }
 
+        #mainApp .btn-send-code {
+            background: rgba(139,69,19,0.55);
+            color: rgba(240,230,204,0.8);
+        }
+
+        #mainApp .btn-send-code:hover { background: rgba(139,69,19,0.9); }
+
         #mainApp .setup-form .enter-btn {
             background: transparent;
             color: rgba(240,230,204,0.65);
@@ -2067,7 +2090,7 @@
 
             .timeline { grid-template-columns: 1fr; }
 
-            .friend-row { grid-template-columns: 1fr 1fr; }
+            .friend-row { grid-template-columns: 1fr 90px 1fr auto 36px; }
 
             .also-inside {
                 grid-template-columns: 1fr;
@@ -2671,6 +2694,7 @@
             isSetupMode: false,
             editCounts: {},
             hasPostedFirst: {},
+            birthdaySent: {},
             boardState: { liberal: 0, fascist: 0 }
         };
 
@@ -2683,6 +2707,7 @@
                     state.reflections = data.reflections || {};
                     state.editCounts = data.editCounts || {};
                     state.hasPostedFirst = data.hasPostedFirst || {};
+                    state.birthdaySent = data.birthdaySent || {};
                     state.boardState = data.boardState || { liberal: 0, fascist: 0 };
                 }
             } catch (error) {
@@ -2697,6 +2722,7 @@
                     reflections: state.reflections,
                     editCounts: state.editCounts,
                     hasPostedFirst: state.hasPostedFirst,
+                    birthdaySent: state.birthdaySent,
                     boardState: state.boardState,
                     lastUpdated: new Date().toISOString()
                 });
@@ -2713,6 +2739,7 @@
                 state.reflections = data.reflections || {};
                 state.editCounts = data.editCounts || {};
                 state.hasPostedFirst = data.hasPostedFirst || {};
+                state.birthdaySent = data.birthdaySent || {};
                 state.boardState = data.boardState || { liberal: 0, fascist: 0 };
 
                 if (state.currentUser) {
@@ -3077,15 +3104,19 @@
 
         function checkBirthdays() {
             const today = getToday();
+            let dirty = false;
             state.friends.forEach(friend => {
-                if (normalizeDate(friend.birthday) === today && friend.email) {
-                    const sentKey = `birthday-sent-${friend.name}-${today}`;
-                    if (!localStorage.getItem(sentKey)) {
-                        sendBirthdayEmail(friend);
-                        localStorage.setItem(sentKey, 'true');
-                    }
+                if (!friend.email || !friend.name || !friend.birthday) return;
+                // Send if birthday has passed this year AND we haven't sent yet
+                // (catches cases where the page wasn't open on the exact birthday)
+                if (hasBirthdayPassed(normalizeDate(friend.birthday), today)
+                        && !state.birthdaySent[friend.name]) {
+                    sendBirthdayEmail(friend);
+                    state.birthdaySent[friend.name] = today;
+                    dirty = true;
                 }
             });
+            if (dirty) saveData();
         }
 
         function renderSetup() {
@@ -3100,6 +3131,7 @@
                     <input type="text" class="form-input" placeholder="Name" value="${friend.name}" data-index="${index}" data-field="name">
                     <input type="text" class="form-input" placeholder="DD/MM" value="${friend.birthday}" data-index="${index}" data-field="birthday">
                     <input type="email" class="form-input" placeholder="Email" value="${friend.email || ''}" data-index="${index}" data-field="email">
+                    <button class="btn-send-code" data-index="${index}" ${!friend.email || !friend.name || !friend.birthday ? 'disabled style="opacity:0.35;cursor:not-allowed"' : ''}>SEND CODE</button>
                     <button class="btn-remove" data-index="${index}">×</button>
                 </div>
             `).join('');
@@ -3110,6 +3142,20 @@
                         const index = parseInt(this.dataset.index);
                         const field = this.dataset.field;
                         state.friends[index][field] = this.value;
+                    });
+                });
+
+                container.querySelectorAll('.btn-send-code').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = parseInt(this.dataset.index);
+                        const friend = state.friends[index];
+                        if (!friend.email || !friend.name || !friend.birthday) return;
+                        sendBirthdayEmail(friend);
+                        state.birthdaySent[friend.name] = getToday();
+                        saveData();
+                        this.textContent = 'SENT ✓';
+                        this.disabled = true;
+                        this.style.opacity = '0.5';
                     });
                 });
 
