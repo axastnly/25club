@@ -2734,7 +2734,25 @@
         }
 
         function generatePassword(name, birthday) {
-            return (name.replace(/\s+/g, '') + birthday.replace(/\//g, '')).toLowerCase();
+            // Hash of name + birthday + club salt → 8-char alphanumeric code.
+            // Unguessable without the salt; deterministic so the same person
+            // always gets the same code across email re-sends.
+            const seed = name.trim().toLowerCase().replace(/\s+/g, '')
+                       + '|' + birthday.trim().replace(/\//g, '')
+                       + '|25xk9m';
+            // djb2 variant (XOR fold into unsigned 32-bit)
+            let h = 5381;
+            for (let i = 0; i < seed.length; i++) {
+                h = (Math.imul(h, 33) ^ seed.charCodeAt(i)) >>> 0;
+            }
+            // Encode into 8 chars using an unambiguous alphabet (no 0/O/1/I/l)
+            const alpha = '23456789abcdefghjkmnpqrstvwxyz';
+            let code = '', n = h;
+            for (let i = 0; i < 8; i++) {
+                code += alpha[n % alpha.length];
+                n = Math.floor(n / alpha.length) || (n + 7) * 31 >>> 0;
+            }
+            return code;
         }
 
         function hasBirthdayPassed(birthday, today) {
@@ -2803,6 +2821,7 @@
                             });
                         });
                     } else {
+                        navTabs.innerHTML = ''; // ensure bar is empty (hidden via #navTabs:empty CSS)
                         document.getElementById('appExitBtn')?.addEventListener('click', function() {
                             playDoorAnimation(logout, null);
                         });
@@ -2819,6 +2838,7 @@
             document.getElementById('landing').classList.remove('hidden');
             document.getElementById('mainApp').classList.add('hidden');
             document.getElementById('passwordInput').value = '';
+            document.getElementById('navTabs').innerHTML = '';
             showTab('timeline');
         }
 
