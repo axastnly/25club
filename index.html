@@ -292,12 +292,27 @@
             width: 100%;
             aspect-ratio: 3/4;
             border: 1px solid var(--border);
-            background: linear-gradient(160deg, #d8cebb 0%, #c8bfad 60%, #b8b0a0 100%);
+            background: #1a1a1a;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.8rem;
-            opacity: 0.45;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .article-image .redacted-label {
+            position: absolute;
+            border: 2px solid #c0392b;
+            color: #c0392b;
+            font-family: var(--font-headline);
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            padding: 3px 8px;
+            transform: rotate(-12deg);
+            opacity: 0.92;
+            text-transform: uppercase;
+            white-space: nowrap;
         }
 
         .photo-caption {
@@ -2422,9 +2437,11 @@
 
                         <div class="article-layout">
                             <div>
-                                <div class="article-image">📰</div>
+                                <div class="article-image">
+                                    <span class="redacted-label">[REDACTED]</span>
+                                </div>
                                 <div class="photo-caption">
-                                    Members of the 25 Club, photographed at an undisclosed location, sometime before all this.
+                                    Members of the 25 Club have never been photographed together. Sources confirm they exist.
                                     <span class="photo-credit">Gazette Photo Desk</span>
                                 </div>
                             </div>
